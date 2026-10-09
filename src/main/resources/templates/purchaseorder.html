@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredient Purchase Order Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+<div class="container-fluid">
+
+    <!-- navigator -->
+    <div class="row div-navigator m-2 p-2">
+        <div class="col-12">
+            <p><a href="/dashboard">Dashboard</a> /Ingredient Module /Ingredient Purchase Order Management</p>
+        </div>
+    </div>
+
+    <!-- title area -->
+    <div class="row p-2 m-2 div-title">
+        <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+            <h1 id="idTitle">Ingredient Purchase Order Management</h1>
+        </div>
+    </div>
+
+    <!-- add new button -->
+    <div class="row mt-2">
+        <div class="col text-end">
+            <button id="addNewPurchaseOrderId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#PurchaseOrderAddForm">Add New Purchase Order</button>
+        </div>
+    </div>
+
+    <!-- table area -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card card-body tableCard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="tablePurchaseOrder">
+                        <thead class="table-dark" id="tableHeadId">
+                        <tr>
+                            <th>#</th>
+                            <th>PO ID</th>
+                            <th>Supplier</th>
+                            <th>Created Date</th>
+                            <th>Expected Date</th>
+                            <th>Amount</th>
+
+                            <th>Status</th>
+                            <th>Modify</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBodyId">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </div>
+</div>
+<!-- Purchase Order Add/Edit Form Modal -->
+<div class="modal" id="PurchaseOrderAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Ingredient Purchase </h2>
+                <h2 id="formTitleNew">Add New Ingredient Purchase </h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formPurchaseOrder" onsubmit="return false" novalidate>
+
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label ><b>Created Date and Time :</b></label>
+                            <p id="createdDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label ><b>Last Updated Date and Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label ><b>PO ID :</b></label>
+                            <p id="InputPOID"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- required mark -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Supplier / user -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectSupplier" class="form-label fw-bold">Supplier : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-building"></i></span>
+                                </div>
+                                <select required class="form-select" id="selectSupplier">
+                                    <option value="" selected disabled>Select Supplier</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expected Date / Amount -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="dateExpected" class="form-label fw-bold">Expected Date : </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-calendar-check"></i></span>
+                                </div>
+                                <input type="date" required id="dateExpected" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textAmount" class="form-label fw-bold">Total Amount :</label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-coins"></i></span>
+                                </div>
+                                <input type="number" step="0.01" placeholder="Auto-calculated from items" id="textAmount" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PO Status -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectPOStatus" class="form-label fw-bold">PO Status : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-paper-plane"></i></span>
+                                </div>
+                                <select required class="form-select" id="selectPOStatus">
+                                    <option value="" selected disabled>Select PO Status</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <hr>
+
+                    <!-- PO Items Sub Section -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <h5 class="fw-bold"><i class="fa-solid fa-box-open me-2"></i>Purchase Order Items</h5>
+                        </div>
+                    </div>
+
+                    <!-- PO Item Add Row -->
+                    <div class="row mt-2 align-items-end">
+                        <div class="col-6">
+                            <label for="selectSupplierIngredient" class="form-label fw-bold">Supplier Ingredient : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-leaf"></i></span>
+                                </div>
+                                <select class="form-select" id="selectSupplierIngredient">
+                                    <option value="" selected disabled>Select Supplier Ingredient</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <label for="textPOQty" class="form-label fw-bold">Quantity : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-cubes"></i></span>
+                                </div>
+                                <input type="number" step="0.01" placeholder="Qty" id="textPOQty" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn btn-success" id="buttonAddPOItem">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PO Items Table -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-striped" id="tablePOItems">
+                                    <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Ingredient</th>
+                                        <th>Quantity(Kg/L)</th>
+                                        <th>Unit Price</th>
+                                        <th>Line Total Price</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tablePOItemsBody">
+                                    </tbody>
+                                    <tfoot>
+                                    <tr class="table-secondary">
+                                        <td colspan="4" class="text-end fw-bold">Total Amount :</td>
+                                        <td id="tdTotalAmount" class="fw-bold">0.00</td>
+                                        <td></td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Purchase Order Add/Edit Form Modal end -->
+
+<!-- Print View Modal -->
+<div class="modal" id="PurchaseOrderViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Purchase Order</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintPurchaseOrder">
+                    <div class="card-header">
+                        <h1>Purchase Order Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr>
+                                <th>PO ID</th>
+                                <td id="tdPOID"></td>
+                            </tr>
+                            <tr>
+                                <th>Supplier</th>
+                                <td id="tdSupplier"></td>
+                            </tr>
+                            <tr>
+                                <th>Created Date</th>
+                                <td id="tdCreatedDate"></td>
+                            </tr>
+                            <tr>
+                                <th>Expected Date</th>
+                                <td id="tdExpectedDate"></td>
+                            </tr>
+                            <tr>
+                                <th>Total Amount</th>
+                                <td id="tdAmount"></td>
+                            </tr>
+                            <tr>
+                                <th>PO Status</th>
+                                <td id="tdPOStatus"></td>
+                            </tr>
+
+                        </table>
+
+                        <h5 class="fw-bold mt-3">Order Items</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tablePrintPOItems">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ingredient</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Line Price</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tablePrintPOItemsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printPurchaseOrderRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Print View Modal end -->
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/ingredients/ingredientpurchase.js"></script>
+</body>
+</html>

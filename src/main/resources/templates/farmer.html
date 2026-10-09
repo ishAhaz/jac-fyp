@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Registration Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <!-- for search -->
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+
+            <!-- navigator -->
+            <div class="row div-navigator m-2 p-2">
+                <div class="col-12">
+                    <p><a href="/dashboard">Dashboard</a> /Farmer Module /Farmer Registration Management</p>
+                </div>
+            </div>
+
+            <!-- title area -->
+            <div class="row p-2 m-2 div-title">
+                <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                    <h1 id="idTitle">Farmer Registration Management</h1>
+                </div>
+            </div>
+
+            <!-- add new button -->
+            <div class="row mt-2">
+                <div class="col text-end">
+                    <button id="addNewFarmerId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#FarmerAddForm">Add New Farmer</button>
+                </div>
+            </div>
+
+            <!-- table area -->
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="card card-body tableCard">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tableFarmer">
+                                <thead class="table-dark" id="tableHeadId">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Farmer ID</th>
+                                    <th>Full Name</th>
+                                    <th>NIC</th>
+                                    <th>Mobile No</th>
+                                    <th>Email</th>
+                                    <th>District</th>
+                                    <th>Compost Customer</th>
+                                    <th>crops</th>
+
+                                    <th>Status</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBodyId">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end container-fluid -->
+    </div>
+</div>
+
+<!-- ===================== FARMER ADD / EDIT FORM MODAL ===================== -->
+<div class="modal" id="FarmerAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Farmer</h2>
+                <h2 id="formTitleNew">Add New Farmer</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formFarmer" onsubmit="return false" novalidate>
+
+                    <!-- Meta row: dates + reg no -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label ><b>Registration Date & Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label ><b>Last Updated Date & Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label ><b>Farmer ID :</b></label>
+                            <p id="InputFarmerID"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- Required mark -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Full Name / District -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textFullname" class="form-label fw-bold">Full Name : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Full Name" required id="textFullname" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="selectDistrict" class="form-label fw-bold">District : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-map-location-dot"></i></span>
+                                </div>
+                                <select required id="selectDistrict" class="form-select">
+                                    <option value="" selected disabled>Select District</option>
+                                    <!-- populated via JS -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NIC / Mobile -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textNIC" class="form-label fw-bold">NIC : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-id-card"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter NIC" required id="textNIC" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textMobile" class="form-label fw-bold">Mobile No : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-mobile-screen-button"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Mobile Number" required id="textMobile" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email / Land Number -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textEmail" class="form-label fw-bold">Email : </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-envelope"></i></span>
+                                </div>
+                                <input type="email" placeholder="Enter Email"  id="textEmail" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textLandno" class="form-label fw-bold">Land Number :</label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-phone"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Land Number" id="textLandno" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--  Status /User-->
+                    <div class="row mt-2">
+
+                        <div class="col-6" id="farmerStatusCol">
+                            <label for="selectStatus" class="form-label fw-bold">Farmer Status : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user-check"></i></span>
+                                </div>
+                                <select required id="selectStatus" class="form-select">
+                                    <option value="" selected disabled>Select Farmer Status</option>
+                                    <!-- populated via JS -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Name / Bank Branch -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textBankname" class="form-label fw-bold">Bank Name : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-building-columns"></i></span>
+                                </div>
+                                <input type="text" required placeholder="Enter Bank Name" id="textBankname" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textBankbranch" class="form-label fw-bold">Bank Branch : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-code-branch"></i></span>
+                                </div>
+                                <input type="text" required placeholder="Enter Bank Branch" id="textBankbranch" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Branch No/Account Number  -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textBankbranchno" class="form-label fw-bold">Bank Branch No : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-list-ol"></i></span>
+                                </div>
+                                <input type="text" required placeholder="Enter Bank Branch No" id="textBankbranchno" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textAccountno" class="form-label fw-bold">Account Number : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-credit-card"></i></span>
+                                </div>
+                                <input type="text" required placeholder="Enter Account Number" id="textAccountno" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Address -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="textAddress" class="form-label fw-bold">Address : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-location-dot"></i></span>
+                                </div>
+                                <textarea placeholder="Enter Address" id="textAddress" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- ===== CREDIT / DUE (crop selection & price now managed by the farmer
+                         themselves on the My Account page — see Crops & Pricing tab) ===== -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <h5 class="fw-bold"><i class="fa-solid fa-wallet me-2"></i>Farmer Credit</h5>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="inputCreditLimit" class="form-label fw-bold">Credit Limit : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-wallet"></i></span>
+                                </div>
+                                <input type="text" required placeholder="Enter Credit Limit" id="inputCreditLimit" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="inputDueAmount" class="form-label fw-bold">Due Amount : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-hand-holding-dollar"></i></span>
+                                </div>
+                                <input type="text" required placeholder="Auto-fill" id="inputDueAmount" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--
+                        REMOVED: Crop Add Row (selectCrop / textPricePerUnit / buttonAddCrop)
+                        and the Crop Items Table (tableCropItems / tableCropItemsBody).
+                        Farmers now pick their own crops and set their own selling price
+                        from the My Account page (Crops & Pricing tab), which submits to
+                        /user/account/me/crops and reuses the same reconciliation logic
+                        (attachNewCrops / syncFarmerCrops / triggerSuggestionsForPendingCrops).
+                    -->
+
+                    <hr>
+
+
+                    <!-- Is Compost Customer -->
+                    <div class="row mt-2" id="compostCustomerRow">
+                        <div class="col-12">
+                            <label class="form-label fw-bold d-block">
+                                Is this farmer a compost customer? : <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="compostCustomerRadio"
+                                       id="radioCompostCustomerYes" value="Yes">
+                                <label class="form-check-label" for="radioCompostCustomerYes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="compostCustomerRadio"
+                                       id="radioCompostCustomerNo" value="No">
+                                <label class="form-check-label" for="radioCompostCustomerNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div><!-- modal-body -->
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div>
+<!--  END FARMER MODAL  -->
+
+
+<!--  PRINT VIEW MODAL  -->
+<div class="modal" id="FarmerViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Farmer</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintFarmer">
+                    <div class="card-header">
+                        <h1>Farmer Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr>
+                                <th>Farmer ID</th>
+                                <td id="tdFarmerID"></td>
+                            </tr>
+                            <tr>
+                                <th>Farmer Full Name</th>
+                                <td id="tdFullname"></td>
+                            </tr>
+
+                            <tr>
+                                <th>NIC</th>
+                                <td id="tdNic"></td>
+                            </tr>
+                            <tr>
+                                <th>Mobile No</th>
+                                <td id="tdMobile"></td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td id="tdEmail"></td>
+                            </tr>
+                            <tr>
+                                <th>District</th>
+                                <td id="tdDistrict"></td>
+                            </tr>
+                            <tr>
+                                <th>Bank Name</th>
+                                <td id="tdBankname"></td>
+                            </tr>
+                            <tr>
+                                <th>Bank Branch</th>
+                                <td id="tdBankbranch"></td>
+                            </tr>
+                            <tr>
+                                <th>Account Number</th>
+                                <td id="tdAccountno"></td>
+                            </tr>
+                            <tr>
+                                <th>Address</th>
+                                <td id="tdAddress"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td id="tdStatus"></td>
+                            </tr>
+                            <tr>
+                                <th>Compost Customer</th>
+                                <td id="tdCompostCustomer"></td>
+                            </tr>
+                        </table>
+
+                        <!-- Crops print sub-table — still shown here as a read-only summary,
+                             even though the crops themselves are now edited from My Account -->
+                        <h5 class="fw-bold mt-3">Farmer Crops</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tablePrintCropItems">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Crop</th>
+                                    <th>Price Per Unit</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tablePrintCropItemsBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Composts print sub-table -->
+                        <h5 class="fw-bold mt-3">Farmer Composts</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tablePrintCompostItems">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Compost</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tablePrintCompostItemsBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printFarmerRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END PRINT VIEW MODAL  -->
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<!-- linked js file -->
+<script src="/js/farmer/farmer.js"></script>
+
+</body>
+</html>

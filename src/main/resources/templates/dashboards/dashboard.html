@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Janith Agro Center</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+</head>
+<body>
+
+<div id="topbar"></div>
+
+<div class="layout">
+
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+
+        <div class="breadcrumb-bar">
+            <span>Dashboard</span>
+        </div>
+
+        <div class="greeting">
+            <h2 id="greetingText">Good morning!</h2>
+            <p>Here's what's happening at Janith Agro Center today.</p>
+        </div>
+
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid" id="statGrid">
+            <div class="text-center text-muted py-3" style="font-size:13px;">Loading...</div>
+        </div>
+
+        <!-- BOTTOM ROW: Quick Actions + Recent Alerts -->
+        <div class="row g-3">
+
+            <!-- Quick Actions (role-based) -->
+            <div class="col-12 col-lg-7">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-bolt"></i> Quick Actions
+                    </div>
+                    <div id="quickActionsGrid" class="quick-actions-grid">
+                        <div class="text-center text-muted py-3" style="font-size:13px;">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Alerts -->
+            <div class="col-12 col-lg-5">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-bell"></i> Recent Alerts
+                    </div>
+                    <div id="recentAlerts">
+                        <div class="text-center text-muted py-3" style="font-size:13px;">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- end main-content -->
+</div><!-- end layout -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+
+<script>
+    // ── Greeting based on time
+    function setGreeting() {
+        const h = new Date().getHours();
+        const text = h < 12 ? 'Good Morning!' : h < 17 ? 'Good Afternoon!' : 'Good Evening!';
+        document.getElementById('greetingText').textContent = text;
+    }
+
+    //set greeting with name
+    // function setGreeting() {
+    //     const h = new Date().getHours();
+    //     const timeOfDay = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    //
+    //     const currentUser = getServiceRequest('/user/account/me');
+    //     const displayName = currentUser?.username || '';
+    //
+    //     document.getElementById('greetingText').textContent =
+    //         displayName ? `${timeOfDay}, ${displayName}!` : `${timeOfDay}!`;
+    // }
+
+    // const displayName =
+    //     currentUser?.employee?.callingname ||
+    //     currentUser?.farmer?.callingname ||
+    //     currentUser?.supermarket?.contactperson ||
+    //     currentUser?.username || '';
+
+    // ── Load dashboard summary stats
+    // ── Load role-based dashboard stats
+    function loadStats() {
+        fetch('/api/dashboard/summary')
+            .then(r => r.json())
+            .then(list => {
+                const grid = document.getElementById('statGrid');
+                if (!list.length) {
+                    grid.innerHTML = '<div class="text-center text-muted py-3" style="font-size:13px;">No stats available</div>';
+                    return;
+                }
+                grid.innerHTML = list.map(s => `
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:${esc(s.bg)};">
+                            <i class="fa-solid ${esc(s.icon)}" style="color:${esc(s.iconColor)};"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value">${esc(s.value)}</div>
+                            <div class="stat-label">${esc(s.label)}</div>
+                        </div>
+                    </div>`).join('');
+            })
+            .catch(() => {
+                document.getElementById('statGrid').innerHTML =
+                    '<div class="text-center text-muted py-3" style="font-size:13px;">Could not load</div>';
+            });
+    }
+
+    // ── Load role-based Quick Actions
+    function loadQuickActions() {
+        fetch('/api/dashboard/quick-actions')
+            .then(r => r.json())
+            .then(list => {
+                const grid = document.getElementById('quickActionsGrid');
+                if (!list.length) {
+                    grid.innerHTML = '<div class="text-center text-muted py-3" style="font-size:13px;">No quick actions available</div>';
+                    return;
+                }
+                grid.innerHTML = list.map(s => `
+                    <a href="${esc(s.url)}" class="quick-action-btn">
+                        <i class="fa-solid ${esc(s.icon)}"></i>
+                        <span>${esc(s.label)}</span>
+                    </a>`).join('');
+            })
+            .catch(() => {
+                document.getElementById('quickActionsGrid').innerHTML =
+                    '<div class="text-center text-muted py-3" style="font-size:13px;">Could not load</div>';
+            });
+    }
+
+    // ── Load recent alerts (notifications relevant to current user's role)
+    function loadRecentAlerts() {
+        fetch('/api/dashboard/recent-alerts')
+            .then(r => r.json())
+            .then(list => {
+                const container = document.getElementById('recentAlerts');
+                if (!list.length) {
+                    container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:13px;">No recent alerts</div>';
+                    return;
+                }
+                container.innerHTML = list.map(n => `
+                <div class="d-flex gap-2 px-3 py-2 border-bottom align-items-start">
+                    <div class="flex-grow-1">
+                        <div class="small fw-semibold">${esc(n.type)}</div>
+                        <div class="small text-muted">${esc(n.message)}</div>
+                        <div style="font-size:10px;" class="text-muted mt-1">${timeAgo(n.createddatetime)}</div>
+                    </div>
+                </div>`).join('');
+            })
+            .catch(() => {
+                document.getElementById('recentAlerts').innerHTML =
+                    '<div class="text-center text-muted py-3" style="font-size:13px;">Could not load</div>';
+            });
+    }
+
+    function timeAgo(dateStr) {
+        if (!dateStr) return '';
+        const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+        if (diff < 60)    return 'Just now';
+        if (diff < 3600)  return Math.floor(diff / 60)    + ' min ago';
+        if (diff < 86400) return Math.floor(diff / 3600)  + ' hr ago';
+        return                   Math.floor(diff / 86400) + ' days ago';
+    }
+
+    function esc(str) {
+        const d = document.createElement('div');
+        d.textContent = str || '';
+        return d.innerHTML;
+    }
+
+    // ── Init
+    setGreeting();
+    loadStats();
+    loadQuickActions();
+    loadRecentAlerts();
+    setInterval(loadStats, 60000);
+</script>
+
+<!--comment section-->
+<!--===============-->
+
+<!--=================Stat cards==============================-->
+<!--1. User enters username & password-->
+<!--2. Spring Security authenticates -> creates session (SecurityContextHolder)-->
+<!--3. Browser loads /dashboard -> dashboard.html (same file for everyone)-->
+<!--4. JS calls loadStats() -> GET /api/dashboard/summary-->
+<!--5. Controller: getDashboardSummary()-->
+<!-- - NO current user check-->
+<!-- - NO role check-->
+<!--6. Runs fixed queries:-->
+<!-- - farmerRepository.countByDeleteddatetimeIsNull()-->
+<!-- - cropInventoryController.countOutOfStock()-->
+<!-- - ingredientInventoryController.countOutOfStock()-->
+<!--7. Returns same JSON to every role-->
+<!--8. JS fills stat-value cards on screen-->
+<!--END -> All roles see identical numbers-->
+<!--=========================================================-->
+
+<!--=================Quick Buttons===========================-->
+<!--1. User enters username & password-->
+<!--2. Spring Security authenticates -> creates session (SecurityContextHolder)-->
+<!--3. Browser loads /dashboard -> dashboard.html (same file for everyone)-->
+<!--4. JS calls loadQuickActions() -> GET /api/dashboard/quick-actions-->
+<!--5. Controller: getQuickActions()-->
+<!-- - CurrentUserUtil.getCurrentUsername() -> reads session username-->
+<!-- - userDao.findByUsernameAndDeleteddatetimeIsNull() -> loads User + roles-->
+<!--6. CHECK: does user exist & have at least 1 role?-->
+<!-- - NO  -> return empty list -> no buttons shown-->
+<!-- - YES -> continue-->
+<!--7. Loop through each Role the user has:-->
+<!-- - DashboardShortcuts.getForRole(role.getName())-->
+<!-- - matches role name to a fixed Java map (Admin/Manager/Officer/Clerk/Farmer/Supermarket)-->
+<!--8. Merge shortcuts from all roles, remove duplicates (seenLabels set)-->
+<!--9. Return merged shortcut list as JSON-->
+<!--10. JS renders one button per shortcut (icon + label + link)-->
+<!--END -> Each role sees a different button set (multi-role = combined set)-->
+<!--=========================================================-->
+
+<!--==================Recent alerts==========================-->
+<!--1. User enters username & password-->
+<!--2. Spring Security authenticates -> creates session (SecurityContextHolder)-->
+<!--3. Browser loads /dashboard -> dashboard.html (same file for everyone)-->
+<!--4. JS calls loadRecentAlerts() -> GET /api/dashboard/recent-alerts-->
+<!--5. Controller: getRecentAlerts()-->
+<!-- - CurrentUserUtil.getCurrentUsername() -> reads session username-->
+<!-- - userDao.findByUsernameAndDeleteddatetimeIsNull() -> loads User + roles-->
+<!--6. CHECK: does user exist & have at least 1 role?-->
+<!-- - NO  -> return empty list -> "No recent alerts"-->
+<!-- - YES -> continue-->
+<!--7. Collect roleIds from currentUser.getRoles()-->
+<!--8. notificationDao.findRecentByRoleIds(roleIds, top 5)-->
+<!-- - DB query, NOT a fixed map (alerts are stored data, tagged with roles)-->
+<!--9. Return matching notifications as JSON-->
+<!--10. JS renders each alert (type, message, time-ago)-->
+<!--END -> Each role sees only alerts tagged for their role(s)-->
+<!--==========================================================-->
+</body>
+</html>

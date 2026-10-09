@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermarket Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <!-- for search -->
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+<div class="container-fluid">
+
+    <!-- navigator -->
+    <div class="row div-navigator m-2 p-2">
+        <div class="col-12">
+            <p><a href="/dashboard">Dashboard</a> /Supermarket Module /Supplier Management</p>
+        </div>
+    </div>
+
+    <!-- title area -->
+    <div class="row p-2 m-2 div-title">
+        <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+            <h1 id="idTitle">Supermarket Management</h1>
+        </div>
+    </div>
+
+    <!-- add new button -->
+    <div class="row mt-2">
+        <div class="col text-end">
+            <button id="addNewSupermarketId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SupermarketAddForm">Add New Supermarket</button>
+        </div>
+    </div>
+
+    <!-- table area -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card card-body tableCard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="tableSupermarket">
+                        <thead class="table-dark" id="tableHeadId">
+                        <tr>
+                            <th>#</th>
+                            <th>Supermarket Name</th>
+                            <th>Contact Person</th>
+                            <th>Contact No</th>
+                            <th>Address</th>
+                            <th>Email</th>
+                            <th>Business Registration Number</th>
+                            <th>Status</th>
+                            <th>Modify</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBodyId">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </div>
+</div>
+<!-- Supplier Add/Edit Form Modal -->
+<div class="modal" id="SupermarketAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Supermarket Details</h2>
+                <h2 id="formTitleNew">Add New Supermarket</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formSupplier" onsubmit="return false" novalidate>
+
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label for="regDate"><b>Registration Date and Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label for="updateDate"><b>Last Updated Date and Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label for="InputRegNo"><b>Registration No :</b></label>
+                            <p id="InputRegNo"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- required mark -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Supermarket Name / Branch Name -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textSupermarketName" class="form-label fw-bold">Supermarket Name : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-shop"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Supermarket Name" required id="textSupermarketName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textBranchName" class="form-label fw-bold">Branch Name : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-code-branch"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Branch Name" required id="textBranchName" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--  District  /Business Reg no    -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectDistrict" class="form-label fw-bold">District : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-map-location-dot"></i></span>
+                                </div>
+                                <select required id="selectDistrict" class="form-select">
+                                    <option value="" selected disabled>Select District</option>
+                                    <!-- populated via JS -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textRegNumber" class="form-label fw-bold">Business Registration Number : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-hashtag"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Registration Number" required id="textRegNumber" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Contact person/Contact No  -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textContactPerson" class="form-label fw-bold">Contact Person : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Contact Person Name" required id="textContactPerson" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textContactNo" class="form-label fw-bold">Contact Number : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-phone"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Contact Number" required id="textContactNo" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!--  Email / Land No  -->
+                    <div class="row mt-2">
+
+                        <div class="col-6">
+                            <label for="textEmail" class="form-label fw-bold">Email : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-envelope"></i></span>
+                                </div>
+                                <input type="email" placeholder="Enter Email" required id="textEmail" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textLandno" class="form-label fw-bold">Land Number :</label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-phone"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Land Number" id="textLandno" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--  Credit limit/due amount     -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="inputCreditLimit" class="form-label fw-bold">Credit Limit : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-wallet"></i></span>
+                                </div>
+                                <input type="text" required placeholder="Enter Credit Limit" id="inputCreditLimit" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="inputDueAmount" class="form-label fw-bold">Due Amount : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-hand-holding-dollar"></i></span>
+                                </div>
+                                <input type="text" required placeholder="Auto-fill" id="inputDueAmount" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--  Status/  User Id     -->
+                   <div class="row mt-2">
+                       <div class="col-6">
+                           <label for="selectStatus" class="form-label fw-bold">Supermarket Status : <span class="text-danger">*</span></label>
+                           <div class="input-group">
+                               <div class="input-group-text">
+                                   <span><i class="fa-solid fa-user-check"></i></span>
+                               </div>
+                               <select required class="form-select" id="selectStatus">
+                                   <option value="" selected disabled>Select supermarket status</option>
+                               </select>
+                           </div>
+                       </div>
+                       <div class="col-6">
+                           <label for="userId" class="form-label fw-bold">
+                               User ID : <span class="text-danger">*</span>
+                           </label>
+                           <div class="input-group">
+                               <div class="input-group-text">
+                                   <i class="fa-solid fa-user-tie"></i>
+                               </div>
+                               <input
+                                       type="text"
+                                       id="userId"
+                                       class="form-control"
+                                       placeholder="Auto-fill"
+                                       autocomplete="off"
+                                       required
+                               >
+                           </div>
+                       </div>
+                   </div>
+
+                    <!-- Address -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="textAddress" class="form-label fw-bold">Address : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-location-dot"></i></span>
+                                </div>
+                                <textarea placeholder="Enter Address" required id="textAddress" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Note -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="textNote" class="form-label fw-bold">Note :</label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-note-sticky"></i></span>
+                                </div>
+                                <textarea placeholder="Enter Note" id="textNote" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Supplier Add/Edit Form Modal end -->
+
+
+<!-- Print View Modal -->
+<div class="modal" id="SupplierViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Supplier</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintSupplier">
+                    <div class="card-header">
+                        <h1>Supplier Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr>
+                                <th>Supplier Name</th>
+                                <td id="tdSupplierName"></td>
+                            </tr>
+                            <tr>
+                                <th>Contact Person</th>
+                                <td id="tdContactPerson"></td>
+                            </tr>
+                            <tr>
+                                <th>Contact Number</th>
+                                <td id="tdContactNo"></td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td id="tdEmail"></td>
+                            </tr>
+                            <tr>
+                                <th>Business Registration Number</th>
+                                <td id="tdRegNumber"></td>
+                            </tr>
+                            <tr>
+                                <th>Address</th>
+                                <td id="tdAddress"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td id="tdStatus"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printSupermarketRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Print View Modal end -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<!-- linked js file -->
+<script src="/js/supermarket/supermarket.js"></script>
+
+</body>
+</html>

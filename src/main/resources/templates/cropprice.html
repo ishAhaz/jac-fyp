@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Price Management</title>
+  <link rel="icon" href="/images/img/Logo.png">
+  <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/css-module/dashboard.css">
+  <link rel="stylesheet" href="/css/css-module/D5-01.css">
+  <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+  <!-- for search -->
+  <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+  <div id="sidebar"></div>
+
+  <div class="main-content" id="mainContent">
+<div class="container-fluid">
+
+  <!-- navigator -->
+  <div class="row div-navigator m-2 p-2">
+    <div class="col-12">
+      <p><a href="/dashboard">Dashboard</a> /Crop Module /Crop Price Management</p>
+    </div>
+  </div>
+
+  <!-- title area -->
+  <div class="row p-2 m-2 div-title">
+    <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+      <h1 id="idTitle">Crop Price Management</h1>
+    </div>
+  </div>
+
+
+
+  <!-- table area -->
+  <div class="row mt-2">
+    <div class="col">
+      <div class="card card-body tableCard">
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered table-striped" id="tableCropPrice">
+            <thead class="table-dark" id="tableHeadId">
+            <tr>
+              <th>#</th>
+              <th>Crop</th>
+              <th>Buy Price Per Kg (Rs.)</th>
+              <th>Markup Price Per Kg (Rs.)</th>
+              <th>Real Price Per Kg (Rs.)</th>
+              <th>Added Date & time</th>
+              <th>Status</th>
+              <th>Added By</th>
+              <th>Modify</th>
+            </tr>
+            </thead>
+            <tbody id="tableBodyId">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container-fluid -->
+
+
+    <!--  CROP PRICE EDIT MODAL  -->
+    <div class="modal" id="CropPriceAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h2 id="formTitleEdit">Edit Crop Price</h2>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="formCropPrice" onsubmit="return false" novalidate>
+
+              <!-- reg info row -->
+              <div class="row mt-1">
+                <div class="col-4">
+                  <label><b>Added Date & Time :</b></label>
+                  <p id="addDate"></p>
+                </div>
+                <div class="col-4">
+                  <label><b>Update Date & Time :</b></label>
+                  <p id="updateDate"></p>
+                </div>
+
+              </div>
+              <hr>
+
+              <!-- required note -->
+              <div class="row mt-1">
+                <div class="col">
+                  <p>Required <span class="text-danger">*</span></p>
+                </div>
+              </div>
+
+              <!-- Crop / Buy price -->
+              <div class="row mt-2">
+                <div class="col-6">
+                  <label for="inputCrop" class="form-label fw-bold">
+                    Crop : <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <div class="input-group-text">
+                      <i class="fa-solid fa-flask"></i>
+                    </div>
+                    <input type="text" step="0.01" min="0"
+                           placeholder="Auto-filled from approved suggestion price"
+                           id="inputCrop" class="form-control"
+                           readonly tabindex="-1">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label for="textBuyPrice" class="form-label fw-bold">
+                    Buy Price Per Kg (Rs.) :
+                  </label>
+                  <div class="input-group">
+                    <div class="input-group-text">
+                      <i class="fa-solid fa-arrow-trend-down"></i>
+                    </div>
+                    <input type="number" step="0.01" min="0"
+                           placeholder="Auto-filled from approved suggestion price"
+                           id="textBuyPrice" class="form-control"
+                           readonly tabindex="-1">
+                  </div>
+
+                </div>
+              </div>
+
+
+              <!-- Markup Price / Real Price -->
+              <div class="row mt-2">
+                <div class="col-6">
+                  <label for="numberMarkupPrice" class="form-label fw-bold">
+                    Markup Price Per Kg (Rs.) :
+                  </label>
+                  <div class="input-group">
+                    <div class="input-group-text">
+                      <i class="fa-solid fa-percent"></i>
+                    </div>
+                    <input type="number" step="0.01" min="0"
+                           placeholder="Enter markup price per kg"
+                           id="numberMarkupPrice" class="form-control">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label for="numberRealPricePerKg" class="form-label fw-bold">
+                    Real Price Per Kg (Rs.) :
+                  </label>
+                  <div class="input-group">
+                    <div class="input-group-text">
+                      <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <input type="number" step="0.01" min="0"
+                           placeholder="Auto-filled after adding markup price"
+                           id="numberRealPricePerKg" class="form-control">
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row mt-2">
+
+
+                <div class="col-6">
+                  <label for="selectStatus" class="form-label fw-bold">
+                    Status : <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <div class="input-group-text">
+                      <i class="fa-solid fa-toggle-on"></i>
+                    </div>
+                    <select id="selectStatus" class="form-select" required>
+                      <option value="" selected disabled>Select Status</option>
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                      <option value="Pending">Pending</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label for="userId" class="form-label fw-bold">
+                    User ID : <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <div class="input-group-text">
+                      <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <input
+                            type="text"
+                            id="userId"
+                            class="form-control"
+                            placeholder="Auto-fill"
+                            autocomplete="off"
+                            required
+                    >
+                  </div>
+                </div>
+              </div>
+
+
+
+              <!-- action buttons -->
+              <div class="row mt-4">
+                <div class="col-6">
+                  <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                  <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+                  <!--<button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>-->
+                </div>
+                <div class="col-6 text-end">
+                  <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                  <!-- <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>-->
+                </div>
+              </div>
+
+            </form>
+          </div><!-- /modal-body -->
+        </div>
+      </div>
+    </div>
+    <!--  END MODAL  -->
+
+
+    <!-- PRINT VIEW MODAL  -->
+    <div class="modal" id="CropPriceViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>View Crop Price</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card" id="divCardPrintCropPrice">
+              <div class="card-header">
+                <h1>Crop Price Details</h1>
+              </div>
+              <div class="card-body">
+                <table class="table table-hover table-bordered table-striped">
+
+                  <tr>
+                    <th>Added Date and Time</th>
+                    <td id="tdViewAddedDatetime"></td>
+                  </tr>
+                  <tr>
+                    <th>Crop</th>
+                    <td id="tdViewCrop"></td>
+                  </tr>
+                  <tr>
+                    <th>Buy Price Per Kg (Rs.)</th>
+                    <td id="tdViewBuyPrice"></td>
+                  </tr>
+                  <tr>
+                    <th>Markup Price Per Kg (Rs.)</th>
+                    <td id="tdViewMarkupPrice"></td>
+                  </tr>
+                  <tr>
+                    <th>Sell Price Per Kg (Rs.)</th>
+                    <td id="tdViewSellPrice"></td>
+                  </tr>
+
+                  <tr>
+                    <th>Status</th>
+                    <td id="tdViewStatus"></td>
+                  </tr>
+                  <tr>
+                    <th>Added By</th>
+                    <td id="tdViewUser"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer text-end">
+            <button type="button" class="btn btn-info" onclick="printCropPriceRecord()">Print</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--  END PRINT VIEW MODAL  -->
+
+  </div>
+</div>
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<!-- linked js file -->
+<script src="/js/crop/cropprice.js"></script>
+</body>
+</html>

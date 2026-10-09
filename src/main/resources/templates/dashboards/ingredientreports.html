@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier and Ingredient Report | Janith Agro Center</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div id="topbar"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <a href="/dashboard" style="color:inherit;text-decoration:none;">Dashboard</a>
+            &rsaquo;
+            <a href="/ingredient" style="color:inherit;text-decoration:none;">Ingredient Management</a>
+            &rsaquo;
+            <span>Supplier &amp; Ingredient Report</span>
+        </div>
+
+        <!-- Page title -->
+        <div class="greeting">
+            <h2>Supplier &amp; Ingredient Report</h2>
+            <p>Summary and statistics of suppliers, ingredients, and ingredient inventory.</p>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px,1fr));">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1e7dd;">
+                    <i class="fa-solid fa-truck-ramp-box" style="color:#198754;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statTotalSuppliers">—</div>
+                    <div class="stat-label">Total Suppliers</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1e7dd;">
+                    <i class="fa-solid fa-circle-check" style="color:#198754;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statActiveSuppliers">—</div>
+                    <div class="stat-label">Active Suppliers</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#cff4fc;">
+                    <i class="fa-solid fa-flask" style="color:#0dcaf0;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statTotalIngredients">—</div>
+                    <div class="stat-label">Total Ingredients</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#fff3cd;">
+                    <i class="fa-solid fa-boxes-stacked" style="color:#ffc107;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statInventoryItems">—</div>
+                    <div class="stat-label">Ingredients in Inventory</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#f8d7da;">
+                    <i class="fa-solid fa-triangle-exclamation" style="color:#dc3545;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statLowStock">—</div>
+                    <div class="stat-label">Low And Out of Stock</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="row g-3">
+
+            <!-- Supplier status donut -->
+            <div class="col-12 col-lg-5">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-chart-pie"></i> Supplier Status Breakdown
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="supplierStatusChart"
+                                role="img"
+                                aria-label="Donut chart showing active vs inactive suppliers">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredient stock status donut -->
+            <div class="col-12 col-lg-7">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-warehouse"></i> Ingredient Stock Status
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="stockStatusChart"
+                                role="img"
+                                aria-label="Bar chart showing in stock vs low stock vs out of stock ingredients">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredient inventory levels horizontal bar -->
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-boxes-stacked"></i> Ingredient Inventory Levels
+                    </div>
+                    <div style="position:relative; width:100%; height:260px;">
+                        <canvas id="inventoryLevelChart"
+                                role="img"
+                                aria-label="Horizontal bar chart showing current stock quantity per ingredient">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suppliers per ingredient horizontal bar -->
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-truck-ramp-box"></i> Suppliers per Ingredient
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="supplierPerIngredientChart"
+                                role="img"
+                                aria-label="Horizontal bar chart showing number of suppliers per ingredient">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- end main-content -->
+</div><!-- end layout -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/chart/chart.umd.js"></script>
+<script>
+
+    // ── Sidebar dropdown toggle ───────────────────────────────────────────
+    function toggleSidebarDropdown(toggleId, subId) {
+        const toggle = document.getElementById(toggleId);
+        const sub    = document.getElementById(subId);
+        const isOpen = toggle.classList.contains('open');
+        document.querySelectorAll('.sidebar-dropdown-toggle.open').forEach(el => el.classList.remove('open'));
+        document.querySelectorAll('.sidebar-sub.open').forEach(el => el.classList.remove('open'));
+        if (!isOpen) { toggle.classList.add('open'); sub.classList.add('open'); }
+    }
+
+    // ── Chart instances ───────────────────────────────────────────────────
+    let supplierStatusChart, stockStatusChart, inventoryLevelChart, supplierPerIngredientChart;
+
+    function buildCharts(data) {
+        const gridColor  = 'rgba(0,0,0,0.06)';
+        const labelColor = '#6c757d';
+
+        // Supplier status donut
+        if (supplierStatusChart) supplierStatusChart.destroy();
+        supplierStatusChart = new Chart(document.getElementById('supplierStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Active', 'Inactive'],
+                datasets: [{
+                    data: [data.activeSuppliers, data.inactiveSuppliers],
+                    backgroundColor: ['#198754', '#dc3545'],
+                    borderWidth: 0,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { color: labelColor, font: { size: 12 }, padding: 16 }
+                    }
+                }
+            }
+        });
+
+        // Ingredient stock status bar (in stock / low stock / out of stock)
+        if (stockStatusChart) stockStatusChart.destroy();
+        stockStatusChart = new Chart(document.getElementById('stockStatusChart'), {
+            type: 'bar',
+            data: {
+                labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+                datasets: [{
+                    label: 'Ingredients',
+                    data: [data.inStockCount, data.lowStockCount, data.outOfStockCount],
+                    backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true }
+                }
+            }
+        });
+
+        // Ingredient inventory levels horizontal bar
+        const invLabels = data.byInventory.map(i => i.ingredientName);
+        const invData   = data.byInventory.map(i => i.quantity);
+
+        if (inventoryLevelChart) inventoryLevelChart.destroy();
+        inventoryLevelChart = new Chart(document.getElementById('inventoryLevelChart'), {
+            type: 'bar',
+            data: {
+                labels: invLabels,
+                datasets: [{
+                    label: 'Quantity in Stock',
+                    data: invData,
+                    backgroundColor: '#0dcaf0',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+
+        // Suppliers per ingredient horizontal bar
+        const supIngLabels = data.bySupplierPerIngredient.map(s => s.ingredientName);
+        const supIngData   = data.bySupplierPerIngredient.map(s => s.supplierCount);
+
+        if (supplierPerIngredientChart) supplierPerIngredientChart.destroy();
+        supplierPerIngredientChart = new Chart(document.getElementById('supplierPerIngredientChart'), {
+            type: 'bar',
+            data: {
+                labels: supIngLabels,
+                datasets: [{
+                    label: 'Suppliers',
+                    data: supIngData,
+                    backgroundColor: '#20c997',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+    }
+
+    // ── Load report data from backend ─────────────────────────────────────
+    function loadReport() {
+        fetch('/reports/ingredientreport/summary')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('statTotalSuppliers').textContent  = data.totalSuppliers  ?? '—';
+                document.getElementById('statActiveSuppliers').textContent = data.activeSuppliers ?? '—';
+                document.getElementById('statTotalIngredients').textContent = data.totalIngredients ?? '—';
+                document.getElementById('statInventoryItems').textContent  = data.inventoryItemCount ?? '—';
+                document.getElementById('statLowStock').textContent        = (data.lowStockCount + data.outOfStockCount) ?? '—';
+                buildCharts(data);
+            })
+            .catch(() => {
+                // Fallback demo data so UI is visible without backend
+                buildCharts({
+                    totalSuppliers: 42, activeSuppliers: 35, inactiveSuppliers: 7,
+                    totalIngredients: 18, inventoryItemCount: 18,
+                    inStockCount: 12, lowStockCount: 4, outOfStockCount: 2,
+                    byInventory: [
+                        { ingredientName: 'Urea',        quantity: 480 },
+                        { ingredientName: 'Compost Mix', quantity: 320 },
+                        { ingredientName: 'Lime',        quantity: 210 },
+                        { ingredientName: 'Rock Phosphate', quantity: 150 },
+                        { ingredientName: 'Potash',      quantity: 95 },
+                        { ingredientName: 'Gypsum',      quantity: 40 }
+                    ],
+                    bySupplierPerIngredient: [
+                        { ingredientName: 'Urea',        supplierCount: 6 },
+                        { ingredientName: 'Compost Mix', supplierCount: 5 },
+                        { ingredientName: 'Lime',        supplierCount: 4 },
+                        { ingredientName: 'Rock Phosphate', supplierCount: 3 },
+                        { ingredientName: 'Potash',      supplierCount: 2 },
+                        { ingredientName: 'Gypsum',      supplierCount: 1 }
+                    ]
+                });
+            });
+    }
+
+    loadReport();
+
+</script>
+</body>
+</html>

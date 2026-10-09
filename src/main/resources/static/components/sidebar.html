@@ -1,0 +1,341 @@
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <!-- ── MAIN ─────────────────────────────────────── -->
+    <div class="sidebar-section">
+        <a class="sidebar-item active" href="/dashboard">
+            <span class="si-icon"><i class="fa-solid fa-gauge"></i></span> Dashboard
+        </a>
+    </div>
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="notificationToggle"
+             onclick="toggleSidebarDropdown('notificationToggle','notificationSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-person-digging"></i></span> Notification
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="notificationSub">
+            <a class="sidebar-subitem" href="/notification">
+                <span class="si-icon"><i class="fa-solid fa-id-card"></i></span> Notification Management
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 1. COMPOST ────────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="compostToggle"
+             onclick="toggleSidebarDropdown('compostToggle','compostSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-recycle"></i></span> Compost
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="compostSub">
+            <a class="sidebar-subitem" href="/compost/compostlist">
+                <span class="si-icon"><i class="fa-solid fa-boxes-stacked"></i></span> Compost Management
+            </a>
+            <a class="sidebar-subitem" href="/compost/compostprice">
+                <span class="si-icon"><i class="fa-solid fa-tag"></i></span> Compost Price Management
+            </a>
+            <a class="sidebar-subitem" href="/compost/compostsale">
+                <span class="si-icon"><i class="fa-solid fa-sack-dollar"></i></span> Compost Sale Management
+            </a>
+            <a class="sidebar-subitem" href="/compost/compostreturn">
+                <span class="si-icon"><i class="fa-solid fa-rotate-left"></i></span> Compost Return Management
+            </a>
+            <a class="sidebar-subitem" href="/compost/mycompostorder">
+                <span class="si-icon"><i class="fa-solid fa-cart-shopping"></i></span> My Compost Order
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 2. CROP ───────────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="cropToggle"
+             onclick="toggleSidebarDropdown('cropToggle','cropSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-seedling"></i></span> Crop
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="cropSub">
+            <a class="sidebar-subitem" href="/crop/croplist">
+                <span class="si-icon"><i class="fa-solid fa-wheat-awn"></i></span> Crop List Management
+            </a>
+            <a class="sidebar-subitem" href="/crop/croppurchase">
+                <span class="si-icon"><i class="fa-solid fa-file-invoice"></i></span> Crop Purchase Order Management
+            </a>
+            <a class="sidebar-subitem" href="/crop/cropquality">
+                <span class="si-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></span> Crop Quality Check Management
+            </a>
+            <a class="sidebar-subitem" href="/crop/cropinventory">
+                <span class="si-icon"><i class="fa-solid fa-warehouse"></i></span> Crop Inventory
+            </a>
+            <a class="sidebar-subitem" href="/crop/cropprice">
+                <span class="si-icon"><i class="fa-solid fa-tags"></i></span> Crop Price Management
+            </a>
+            <a class="sidebar-subitem" href="/crop/cropsuggestionprice">
+                <span class="si-icon"><i class="fa-solid fa-lightbulb"></i></span> Crop Suggestion Price Management
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 3. EMPLOYEE ───────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="employeeToggle"
+             onclick="toggleSidebarDropdown('employeeToggle','employeeSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-users"></i></span> Employee
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="employeeSub">
+            <a class="sidebar-subitem" href="/employee/employeelist">
+                <span class="si-icon"><i class="fa-solid fa-user-tie"></i></span> Employee Management
+            </a>
+            <a class="sidebar-subitem" href="/employee/designations">
+                <span class="si-icon"><i class="fa-solid fa-sitemap"></i></span> Designation Management
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 4. FARMER ─────────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="farmerToggle"
+             onclick="toggleSidebarDropdown('farmerToggle','farmerSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-person-digging"></i></span> Farmer
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="farmerSub">
+            <a class="sidebar-subitem" href="/farmer/farmerlist">
+                <span class="si-icon"><i class="fa-solid fa-id-card"></i></span> Farmer Registration Management
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 5. GRN ─────────────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="grnToggle"
+             onclick="toggleSidebarDropdown('grnToggle','grnSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-clipboard-list"></i></span> GRN
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="grnSub">
+            <a class="sidebar-subitem" href="/grn/grningredients">
+                <span class="si-icon"><i class="fa-solid fa-flask"></i></span> GRN - Ingredient
+            </a>
+            <a class="sidebar-subitem" href="/grn/grncrop">
+                <span class="si-icon"><i class="fa-solid fa-carrot"></i></span> GRN - Crop
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 6. INGREDIENT ─────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="ingredientToggle"
+             onclick="toggleSidebarDropdown('ingredientToggle','ingredientSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-flask"></i></span> Ingredient
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="ingredientSub">
+            <a class="sidebar-subitem" href="/ingredient/ingredientlist">
+                <span class="si-icon"><i class="fa-solid fa-vial"></i></span> Ingredient Management
+            </a>
+            <a class="sidebar-subitem" href="/ingredient/ingredientquality">
+                <span class="si-icon"><i class="fa-solid fa-microscope"></i></span> Ingredient Quality Check Management
+            </a>
+            <a class="sidebar-subitem" href="/ingredient/ingredientinventory">
+                <span class="si-icon"><i class="fa-solid fa-boxes-packing"></i></span> Ingredient Inventory
+            </a>
+            <a class="sidebar-subitem" href="/ingredient/ingredientprice">
+                <span class="si-icon"><i class="fa-solid fa-tag"></i></span> Ingredient Price Management
+            </a>
+            <a class="sidebar-subitem" href="/ingredient/suggestionpricein">
+                <span class="si-icon"><i class="fa-solid fa-lightbulb"></i></span> Ingredient Suggestion Price Management
+            </a>
+            <a class="sidebar-subitem" href="/ingredient/purchaseorder">
+                <span class="si-icon"><i class="fa-solid fa-cart-plus"></i></span> Ingredient Purchase Order Management
+            </a>
+            <a class="sidebar-subitem" href="/ingredient/supplier">
+                <span class="si-icon"><i class="fa-solid fa-truck-ramp-box"></i></span> Supplier Management
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 7. INVOICE ────────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="invoiceToggle"
+             onclick="toggleSidebarDropdown('invoiceToggle','invoiceSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span> Invoice
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="invoiceSub">
+            <a class="sidebar-subitem" href="/invoice/invoicelist">
+                <span class="si-icon"><i class="fa-solid fa-receipt"></i></span> Invoice Management
+            </a>
+            <a class="sidebar-subitem" href="/invoice/myinvoices">
+                <span class="si-icon"><i class="fa-solid fa-seedling"></i></span> My Invoices
+            </a>
+
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 8. LOGISTICS ──────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="logisticsToggle"
+             onclick="toggleSidebarDropdown('logisticsToggle','logisticsSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-truck"></i></span> Logistics
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="logisticsSub">
+
+            <a class="sidebar-subitem" href="/logistics/delivery">
+                <span class="si-icon"><i class="fa-solid fa-route"></i></span> Delivery Management
+            </a>
+
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 9. PRIVILEGE ──────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="privilegeToggle"
+             onclick="toggleSidebarDropdown('privilegeToggle','privilegeSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-shield-halved"></i></span> Privilege
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="privilegeSub">
+            <a class="sidebar-subitem" href="/privilege/privilegelist">
+                <span class="si-icon"><i class="fa-solid fa-key"></i></span> Privilege Management
+            </a>
+        </div>
+    </div>
+
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 11. SUPERMARKET ───────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="supermarketToggle"
+             onclick="toggleSidebarDropdown('supermarketToggle','supermarketSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-store"></i></span> Supermarket
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="supermarketSub">
+            <a class="sidebar-subitem" href="/supermarket/supermarketlist">
+                <span class="si-icon"><i class="fa-solid fa-building-columns"></i></span> Supermarket Management
+            </a>
+            <a class="sidebar-subitem" href="/supermarket/supermarketorder">
+                <span class="si-icon"><i class="fa-solid fa-cart-shopping"></i></span> Supermarket Order Management
+            </a>
+            <a class="sidebar-subitem" href="/supermarket/supermarketreturn">
+                <span class="si-icon"><i class="fa-solid fa-rotate-left"></i></span> Supermarket Return Management
+            </a>
+            <a class="sidebar-subitem" href="/supermarket/mycroporder">
+                <span class="si-icon"><i class="fa-solid fa-basket-shopping"></i></span> My Crop Order
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 12. USER ──────────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="userToggle"
+             onclick="toggleSidebarDropdown('userToggle','userSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-circle-user"></i></span> User
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="userSub">
+            <a class="sidebar-subitem" href="/user/usermanagement">
+                <span class="si-icon"><i class="fa-solid fa-user-gear"></i></span> User Profile Management
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 13. PAYMENTS ──────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="paymentsToggle"
+             onclick="toggleSidebarDropdown('paymentsToggle','paymentsSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-money-bill-wave"></i></span> Payments
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="paymentsSub">
+            <a class="sidebar-subitem" href="/payments/paymentlist">
+                <span class="si-icon"><i class="fa-solid fa-hand-holding-dollar"></i></span> Payment Management
+            </a>
+            <a class="sidebar-subitem" href="/payments/expensepaymentlist">
+                <span class="si-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span> Expense Payment Management
+            </a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <!-- ── 14. REPORTS ───────────────────────────────── -->
+    <div class="sidebar-section">
+        <div class="sidebar-item sidebar-dropdown-toggle" id="reportsToggle"
+             onclick="toggleSidebarDropdown('reportsToggle','reportsSub')">
+            <span class="si-label">
+                <span class="si-icon"><i class="fa-solid fa-chart-bar"></i></span> Reports
+            </span>
+            <i class="fa-solid fa-chevron-right si-chevron"></i>
+        </div>
+        <div class="sidebar-sub" id="reportsSub">
+            <a class="sidebar-subitem" href="/reports/farmerreport">
+                <span class="si-icon"><i class="fa-solid fa-chart-line"></i></span> Farmer Reports
+            </a>
+            <a class="sidebar-subitem" href="/reports/ingredientreport">
+                <span class="si-icon"><i class="fa-solid fa-flask"></i></span> Supplier & Ingredient Reports
+            </a>
+            <a class="sidebar-subitem" href="/reports/purchaseorderreport">
+                <span class="si-icon"><i class="fa-solid fa-file-invoice"></i></span> Ingredient Order Reports
+            </a>
+            <a class="sidebar-subitem" href="/reports/cropreport">
+                <span class="si-icon"><i class="fa-solid fa-seedling"></i></span> Crop Reports
+            </a>
+        </div>
+    </div>
+
+</div>
+<!-- END SIDEBAR -->

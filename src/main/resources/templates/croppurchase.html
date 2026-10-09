@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Purchase Order Management</title>
+  <link rel="icon" href="/images/img/Logo.png">
+  <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/css-module/dashboard.css">
+  <link rel="stylesheet" href="/css/css-module/D5-01.css">
+  <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+  <!-- for search -->
+  <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+  <div id="sidebar"></div>
+
+  <div class="main-content" id="mainContent">
+<div class="container-fluid">
+
+  <!-- navigator -->
+  <div class="row div-navigator m-2 p-2">
+    <div class="col-12">
+      <p><a href="/dashboard">Dashboard</a> /Crop Module /Crop Purchase Order Management</p>
+    </div>
+  </div>
+
+  <!-- title area -->
+  <div class="row p-2 m-2 div-title">
+    <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+      <h1 id="idTitle">Crop Purchase Order Management</h1>
+    </div>
+  </div>
+
+  <!-- add new button -->
+  <div class="row mt-2">
+    <div class="col text-end">
+      <button type="button" id="addNewCropPurchaseId" class="btn btn-primary"
+              data-bs-toggle="modal" data-bs-target="#CropPurchaseAddForm">
+        Add New Purchase
+      </button>
+    </div>
+  </div>
+
+  <!-- table area -->
+  <div class="row mt-2">
+    <div class="col">
+      <div class="card card-body tableCard">
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered table-striped" id="tableCropPurchase">
+            <thead class="table-dark" id="tableHeadId">
+            <tr>
+              <th>#</th>
+              <th>PO ID</th>
+              <th>Farmer</th>
+              <th>Created Date</th>
+              <th>Expected Date</th>
+              <th>Amount</th>
+              <th>PO Status</th>
+              <th>Modify</th>
+            </tr>
+            </thead>
+            <tbody id="tableBodyId">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container-fluid -->
+  </div>
+</div>
+
+<!-- CROP PURCHASE ADD/EDIT MODAL -->
+<div class="modal" id="CropPurchaseAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2 id="formTitleEdit">Edit Crop Purchase</h2>
+        <h2 id="formTitleNew">Add New Crop Purchase</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="formCropPurchase" onsubmit="return false" novalidate>
+
+          <!-- reg info row -->
+          <div class="row mt-1">
+            <div class="col-4">
+              <label><b>Purchase Date and Time :</b></label>
+              <p id="regDate"></p>
+            </div>
+            <div class="col-4">
+              <label><b>Last Updated Date and Time :</b></label>
+              <p id="updateDate"></p>
+            </div>
+            <div class="col-4">
+              <label><b>PO ID :</b></label>
+              <p id="InputPOID"></p>
+            </div>
+          </div>
+          <hr>
+
+          <!-- required note -->
+          <div class="row mt-1">
+            <div class="col">
+              <p>Required <span class="text-danger">*</span></p>
+            </div>
+          </div>
+
+          <!-- Farmer / User -->
+          <div class="row mt-2">
+            <div class="col-6">
+              <label for="selectFarmer" class="form-label fw-bold">
+                Farmer : <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <div class="input-group-text">
+                  <i class="fa-solid fa-person-digging"></i>
+                </div>
+                <select id="selectFarmer" class="form-select" required>
+                  <option value="" selected disabled>Select Farmer</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-6">
+              <label for="userId" class="form-label fw-bold">
+                User ID : <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <div class="input-group-text">
+                  <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <input type="text" id="userId" class="form-control"
+                       placeholder="Auto-fill" autocomplete="off" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expected Date / Amount -->
+          <div class="row mt-2">
+            <div class="col-6">
+              <label for="dateExpected" class="form-label fw-bold">Expected Date :</label>
+              <div class="input-group">
+                <div class="input-group-text">
+                  <span><i class="fa-solid fa-calendar-check"></i></span>
+                </div>
+                <input type="date" required id="dateExpected" class="form-control">
+              </div>
+            </div>
+            <div class="col-6">
+              <label for="textAmount" class="form-label fw-bold">Total Amount :</label>
+              <div class="input-group">
+                <div class="input-group-text">
+                  <span><i class="fa-solid fa-coins"></i></span>
+                </div>
+                <input type="number" step="0.01" placeholder="Auto-calculated from items"
+                       id="textAmount" class="form-control" readonly>
+              </div>
+            </div>
+          </div>
+
+          <!-- PO Status -->
+          <div class="row mt-2">
+            <div class="col-6">
+              <label for="selectPOStatus" class="form-label fw-bold">PO Status : <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <div class="input-group-text">
+                  <span><i class="fa-solid fa-paper-plane"></i></span>
+                </div>
+                <select required class="form-select" id="selectPOStatus">
+                  <option value="" selected disabled>Select PO Status</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+
+
+          <hr>
+
+          <!-- Purchase Items Sub Section -->
+          <div class="row mt-2">
+            <div class="col">
+              <h5 class="fw-bold"><i class="fa-solid fa-basket-shopping me-2"></i>Purchase Items</h5>
+            </div>
+          </div>
+
+          <!-- Item Add Row -->
+          <div class="row mt-2 align-items-end">
+            <div class="col-6">
+              <label for="selectItemCrop" class="form-label fw-bold">Crop : <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <div class="input-group-text">
+                  <i class="fa-solid fa-seedling"></i>
+                </div>
+                <select id="selectItemCrop" class="form-select">
+                  <option value="" selected disabled>Select Crop</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-5">
+              <label for="numberItemQty" class="form-label fw-bold">Quantity (Kg) : <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <div class="input-group-text">
+                  <i class="fa-solid fa-weight-scale"></i>
+                </div>
+                <input type="number" step="0.01" min="0"
+                       placeholder="Qty" id="numberItemQty" class="form-control">
+              </div>
+            </div>
+            <div class="col-1">
+              <button type="button" class="btn btn-success" id="buttonAddPOItem">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Items Table -->
+          <div class="row mt-2">
+            <div class="col">
+              <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped" id="tableItems">
+                  <thead class="table-dark">
+                  <tr>
+                    <th>#</th>
+                    <th>Crop</th>
+                    <th>Quantity (Kg)</th>
+                    <th>Unit Price</th>
+                    <th>Line Total Price</th>
+                    <th>Remove</th>
+                  </tr>
+                  </thead>
+                  <tbody id="tableItemsBody">
+                  </tbody>
+                  <tfoot>
+                  <tr class="table-secondary">
+                    <td colspan="4" class="text-end fw-bold">Total Amount :</td>
+                    <td id="tdTotalAmount" class="fw-bold">0.00</td>
+                    <td></td>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="row mt-2">
+            <div class="col-6">
+              <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+              <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+              <button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>
+            </div>
+            <div class="col-6 text-end">
+              <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+              <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+            </div>
+          </div>
+
+        </form>
+      </div><!-- /modal-body -->
+    </div>
+  </div>
+</div>
+<!-- END CROP PURCHASE MODAL -->
+
+
+<!-- PRINT VIEW MODAL -->
+<div class="modal" id="CropPurchaseViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>View Crop Purchase</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card" id="divCardPrintCropPurchase">
+          <div class="card-header">
+            <h1>Crop Purchase Details</h1>
+          </div>
+          <div class="card-body">
+            <table class="table table-hover table-bordered table-striped">
+              <tr>
+                <th>PO ID</th>
+                <td id="tdViewPurNo"></td>
+              </tr>
+              <tr>
+                <th>Farmer</th>
+                <td id="tdViewFarmer"></td>
+              </tr>
+              <tr>
+                <th>Purchase Date</th>
+                <td id="tdViewPurchaseDate"></td>
+              </tr>
+              <tr>
+                <th>Expected Date</th>
+                <td id="tdViewExpectedDate"></td>
+              </tr>
+              <tr>
+                <th>Total Amount</th>
+                <td id="tdViewTotal"></td>
+              </tr>
+              <tr>
+                <th>PO Status</th>
+                <td id="tdViewPOStatus"></td>
+              </tr>
+
+            </table>
+
+            <h5 class="fw-bold mt-3">Purchase Items</h5>
+            <div class="table-responsive">
+              <table class="table table-hover table-bordered table-striped" id="tableViewItems">
+                <thead class="table-dark">
+                <tr>
+                  <th>#</th>
+                  <th>Crop</th>
+                  <th>Quantity (Kg)</th>
+                  <th>Unit Price</th>
+                  <th>Total Line Price</th>
+                </tr>
+                </thead>
+                <tbody id="tableViewItemsBody"></tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer text-end">
+        <button type="button" class="btn btn-info" onclick="printCropPurchaseRecord()">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END PRINT VIEW MODAL -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<!-- linked common js file -->
+<script src="/js/common/commonFunction.js"></script>
+<!-- linked js file -->
+<script src="/js/crop/croppurchase.js"></script>
+
+</body>
+</html>

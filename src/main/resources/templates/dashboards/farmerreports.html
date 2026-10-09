@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Report | Janith Agro Center</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div id="topbar"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <a href="/dashboard" style="color:inherit;text-decoration:none;">Dashboard</a>
+            &rsaquo;
+            <a href="/farmer" style="color:inherit;text-decoration:none;">Farmer Management</a>
+            &rsaquo;
+            <span>Farmer Report</span>
+        </div>
+
+        <!-- Page title -->
+        <div class="greeting">
+            <h2>Farmer Report</h2>
+            <p>Summary and statistics of all registered farmers.</p>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px,1fr));">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1e7dd;">
+                    <i class="fa-solid fa-person-digging" style="color:#198754;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statTotal">—</div>
+                    <div class="stat-label">Total Farmers</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1e7dd;">
+                    <i class="fa-solid fa-circle-check" style="color:#198754;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statActive">—</div>
+                    <div class="stat-label">Active</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#f8d7da;">
+                    <i class="fa-solid fa-circle-xmark" style="color:#dc3545;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statInactive">—</div>
+                    <div class="stat-label">Inactive</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#cff4fc;">
+                    <i class="fa-solid fa-user-plus" style="color:#0dcaf0;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statNew">—</div>
+                    <div class="stat-label">New This Month</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="row g-3">
+
+            <!-- District bar chart -->
+            <div class="col-12 col-lg-7">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-map-location-dot"></i> Farmers by District
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="districtChart"
+                                role="img"
+                                aria-label="Bar chart showing farmer count per district">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status donut chart -->
+            <div class="col-12 col-lg-5">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-chart-pie"></i> Status Breakdown
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="statusChart"
+                                role="img"
+                                aria-label="Donut chart showing active vs inactive farmers">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crop distribution horizontal bar -->
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-seedling"></i> Crop Distribution
+                    </div>
+                    <div style="position:relative; width:100%; height:220px;">
+                        <canvas id="cropChart"
+                                role="img"
+                                aria-label="Horizontal bar chart showing farmer count per crop">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- end main-content -->
+</div><!-- end layout -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/chart/chart.umd.js"></script>
+<script>
+
+    // ── Sidebar dropdown toggle ───────────────────────────────────────────
+    function toggleSidebarDropdown(toggleId, subId) {
+        const toggle = document.getElementById(toggleId);
+        const sub    = document.getElementById(subId);
+        const isOpen = toggle.classList.contains('open');
+        document.querySelectorAll('.sidebar-dropdown-toggle.open').forEach(el => el.classList.remove('open'));
+        document.querySelectorAll('.sidebar-sub.open').forEach(el => el.classList.remove('open'));
+        if (!isOpen) { toggle.classList.add('open'); sub.classList.add('open'); }
+    }
+
+    // ── Chart instances ───────────────────────────────────────────────────
+    let districtChart, statusChart, cropChart;
+
+    function buildCharts(data) {
+        const gridColor  = 'rgba(0,0,0,0.06)';
+        const labelColor = '#6c757d';
+
+        // District bar chart
+        const districtLabels = data.byDistrict.map(d => d.district);
+        const districtData   = data.byDistrict.map(d => d.count);
+
+        if (districtChart) districtChart.destroy();
+        districtChart = new Chart(document.getElementById('districtChart'), {
+            type: 'bar',
+            data: {
+                labels: districtLabels,
+                datasets: [{
+                    label: 'Farmers',
+                    data: districtData,
+                    backgroundColor: '#198754',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 }, autoSkip: false, maxRotation: 30 }, grid: { color: gridColor } },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true }
+                }
+            }
+        });
+
+        // Status donut chart
+        if (statusChart) statusChart.destroy();
+        statusChart = new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Active', 'Inactive'],
+                datasets: [{
+                    data: [data.activeFarmers, data.inactiveFarmers],
+                    backgroundColor: ['#198754', '#dc3545'],
+                    borderWidth: 0,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { color: labelColor, font: { size: 12 }, padding: 16 }
+                    }
+                }
+            }
+        });
+
+        // Crop horizontal bar chart
+        const cropLabels = data.byCrop.map(c => c.cropName);
+        const cropData   = data.byCrop.map(c => c.count);
+
+        if (cropChart) cropChart.destroy();
+        cropChart = new Chart(document.getElementById('cropChart'), {
+            type: 'bar',
+            data: {
+                labels: cropLabels,
+                datasets: [{
+                    label: 'Farmers',
+                    data: cropData,
+                    backgroundColor: '#20c997',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+    }
+
+    // ── Load report data from backend ─────────────────────────────────────
+    function loadReport() {
+        fetch('/reports/farmerreport/summary')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('statTotal').textContent    = data.totalFarmers    ?? '—';
+                document.getElementById('statActive').textContent   = data.activeFarmers   ?? '—';
+                document.getElementById('statInactive').textContent = data.inactiveFarmers ?? '—';
+                document.getElementById('statNew').textContent      = data.newThisMonth    ?? '—';
+                buildCharts(data);
+            })
+            .catch(() => {
+                Notiflix.Notify.failure("Failed to load farmer report data.");
+            });
+    }
+
+    loadReport();
+
+</script>
+</body>
+</html>

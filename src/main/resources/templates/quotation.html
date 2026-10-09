@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+
+
+<div class="container-fluid">
+
+    <div class="row div-navigator m-2 p-2">
+        <div class="col-12"><p><a href="/dashboard">Dashboard</a>  /Quotation Module / Quotation Management</p></div>
+    </div>
+
+    <div class="row p-2 m-2 div-title">
+        <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+            <h1 id="idTitle">Quotation Management</h1>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col text-end">
+            <button id="addNewQuotationId" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#QuotationAddForm">Add New Quotation</button>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card card-body tableCard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="tableQuotation">
+                        <thead class="table-dark" id="tableHeadId">
+                        <tr>
+                            <th>#</th>
+                            <th>Quotation No</th>
+                            <th>Customer Type</th>
+                            <th>Customer</th>
+
+                            <th>Valid Until Date</th>
+                            <th>Total Amount</th>
+                            <th>Quotation Status</th>
+                            <th>User</th>
+                            <th>Modify</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBodyId"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+<!-- Quotation Add/Edit Modal -->
+<div class="modal" id="QuotationAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Quotation</h2>
+                <h2 id="formTitleNew">Add New Quotation</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formQuotation" onsubmit="return false" novalidate>
+
+                    <!-- Meta info row -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Quotation Added Date & Time :</b></label>
+                            <p id="quotationDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Last Updated Date & Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Quotation No :</b></label>
+                            <p id="InputQuotationNo"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="row mt-1">
+                        <div class="col"><p>Required <span class="text-danger">*</span></p></div>
+                    </div>
+
+                    <!--  Customer Type radio / User -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label class="form-label fw-bold">Customer Type : <span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline mt-2">
+                                <input class="form-check-input" type="radio" name="customerType"
+                                       id="radioSupermarket" value="supermarket" required>
+                                <label class="form-check-label fw-bold" for="radioSupermarket">
+                                    <i class="fa-solid fa-store text-primary"></i> Supermarket
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline mt-2">
+                                <input class="form-check-input" type="radio" name="customerType"
+                                       id="radioFarmer" value="farmer">
+                                <label class="form-check-label fw-bold" for="radioFarmer">
+                                    <i class="fa-solid fa-person-digging text-success"></i> Farmer
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline mt-2">
+                                <input class="form-check-input" type="radio" name="customerType"
+                                       id="radioNonReg" value="nonreg">
+                                <label class="form-check-label fw-bold" for="radioNonReg">
+                                    <i class="fa-solid fa-user text-secondary"></i> Non-Reg Farmer
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textUser" class="form-label fw-bold">User :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-user-tie"></i></div>
+                                <input type="text" id="textUser" class="form-control"
+                                       readonly placeholder="Auto-fill">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supermarket select (shown when supermarket chosen) -->
+                    <div class="row mt-2 d-none" id="rowSupermarket">
+                        <div class="col-6">
+                            <label for="selectSupermarket" class="form-label fw-bold">
+                                Supermarket : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-store"></i></div>
+                                <select id="selectSupermarket" class="form-select">
+                                    <option value="" selected disabled>Select Supermarket</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--  Farmer select (shown when farmer chosen) -->
+                    <div class="row mt-2 d-none" id="rowFarmer">
+                        <div class="col-6">
+                            <label for="selectFarmer" class="form-label fw-bold">
+                                Farmer : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-person-digging"></i></div>
+                                <select id="selectFarmer" class="form-select">
+                                    <option value="" selected disabled>Select Farmer</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--  Quotation Status / Delivery Date -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectQuotationStatus" class="form-label fw-bold">
+                                Quotation Status : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-circle-half-stroke"></i></div>
+                                <select required id="selectQuotationStatus" class="form-select">
+                                    <option value="" selected disabled>Select Quotation Status</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="dateValid" class="form-label fw-bold">Valid Until Date :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-truck-fast"></i></div>
+                                <input type="date" id="dateValid" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--  Total Amount  -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textTotalAmount" class="form-label fw-bold">Total Amount :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-coins"></i></div>
+                                <input type="text" id="textTotalAmount" class="form-control"
+                                       readonly placeholder="Auto calculated by item table">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--  Note -->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <label for="textNote" class="form-label fw-bold">Note :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-note-sticky"></i></div>
+                                <textarea placeholder="Enter Note" id="textNote"
+                                          class="form-control" ></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- ===== SUPERMARKET ITEMS SECTION (Crop-based) ===== -->
+                    <div id="sectionSupermarketItems" class="d-none">
+                        <div class="row mt-2">
+                            <div class="col">
+                                <h5 class="fw-bold"><i class="fa-solid fa-store me-2"></i>Quotation Items (Supermarket)</h5>
+                            </div>
+                        </div>
+                        <!-- Add row -->
+                        <div class="row mt-2 align-items-end">
+                            <div class="col-6">
+                                <label for="inputSmCrop" class="form-label fw-bold">
+                                    Crop : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-seedling"></i></div>
+                                    <select id="inputSmCrop" class="form-select">
+                                        <option value="" disabled selected>Select Crop</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <label for="inputSmUnitPrice" class="form-label fw-bold">
+                                    Unit Price : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-tag"></i></div>
+                                    <input type="number" step="0.01" min="0"
+                                           placeholder="Unit Price" id="inputSmUnitPrice" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label for="inputSmQty" class="form-label fw-bold">
+                                    Quantity : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-cubes"></i></div>
+                                    <input type="number" step="0.01" min="0"
+                                           placeholder="Qty" id="inputSmQty" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-success " id="btnAddSmItem">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Table -->
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-striped" id="tableSmItems">
+                                        <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Crop</th>
+                                            <th>Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th>Line Total</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="smItemsBody"></tbody>
+                                        <tfoot>
+                                        <tr class="table-secondary">
+                                            <td colspan="4" class="text-end fw-bold">Total Amount :</td>
+                                            <td id="smTotalAmount" class="fw-bold">0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ===== END SUPERMARKET ITEMS ===== -->
+
+                    <!-- ===== FARMER  (Compost-based) ===== -->
+                    <div id="sectionFarmerItems" class="d-none">
+                        <div class="row mt-2">
+                            <div class="col">
+                                <h5 class="fw-bold"><i class="fa-solid fa-box-open me-2"></i>Quotation Items (Compost)</h5>
+                            </div>
+                        </div>
+                        <!-- Add row -->
+                        <div class="row mt-2 align-items-end">
+                            <div class="col-6">
+                                <label for="inputFarmerCompost" class="form-label fw-bold">
+                                    Compost : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-leaf"></i></div>
+                                    <select id="inputFarmerCompost" class="form-select">
+                                        <option value="" disabled selected>Select Compost</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-3">
+                                <label for="inputFarmerUnitPrice" class="form-label fw-bold">
+                                    Unit Price : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-coins"></i></div>
+                                    <input type="number" step="0.01" min="0"
+                                           placeholder="Unit Price" id="inputFarmerUnitPrice" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label for="inputFarmerQty" class="form-label fw-bold">
+                                    Quantity : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-cubes"></i></div>
+                                    <input type="number" step="0.01" min="0"
+                                           placeholder="Qty" id="inputFarmerQty" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-success " id="btnAddFarmerItem">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Table -->
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-striped" id="tableFarmerItems">
+                                        <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Compost</th>
+
+                                            <th>Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th>Line Total</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="farmerItemsBody"></tbody>
+                                        <tfoot>
+                                        <tr class="table-secondary">
+                                            <td colspan="4" class="text-end fw-bold">Total Amount :</td>
+                                            <td id="farmerTotalAmount" class="fw-bold">0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ===== END FARMER ITEMS ===== -->
+
+                    <!-- Buttons -->
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <button type="reset"  class="btn btn-outline-primary  buttonClear"  id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info     buttonPrint"  id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger   buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Quotation Add/Edit Modal end -->
+
+
+<!-- Print View Modal -->
+<div class="modal" id="QuotationViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Quotation</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintQuotation">
+                    <div class="card-header"><h1>Quotation Details</h1></div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr><th>Quotation No</th>                <td id="tdQuotationNo"></td></tr>
+                            <tr><th>Customer Type</th>          <td id="tdCustomerType"></td></tr>
+                            <tr><th>Customer</th>               <td id="tdCustomer"></td></tr>
+                            <tr><th>Valid Date</th>          <td id="tdValidDate"></td></tr>
+                            <tr><th>Total Amount</th>           <td id="tdTotalAmount"></td></tr>
+                            <tr><th>Quotation Status</th>        <td id="tdQuotationStatus"></td></tr>
+                            <tr><th>Note</th>                   <td id="tdNote"></td></tr>
+                            <tr><th>User</th>                   <td id="tdUser"></td></tr>
+                        </table>
+
+                        <h5 class="mt-3 fw-bold">Quotation Items</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="printQuotationItemsTable">
+                                <thead class="table-dark">
+                                <tr id="printQuotationItemsHead">
+
+                                </tr>
+                                </thead>
+                                <tbody id="printQuotationItemsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printQuotationRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Print View Modal end -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/quotation/quotation.js"></script>
+
+
+<script>
+    // ── Customer type radio toggle ──────────────────────────────────────
+    document.querySelectorAll('input[name="customerType"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            const val = this.value;
+
+            // hide all conditional rows & sections first
+            document.getElementById('rowSupermarket').classList.add('d-none');
+            document.getElementById('rowFarmer').classList.add('d-none');
+            document.getElementById('rowNonReg').classList.add('d-none');
+            document.getElementById('sectionSupermarketItems').classList.add('d-none');
+            document.getElementById('sectionFarmerItems').classList.add('d-none');
+
+            // clear customer-specific fields
+            document.getElementById('selectSupermarket').value = '';
+            document.getElementById('selectFarmer').value = '';
+            document.getElementById('textGuestName').value = '';
+            document.getElementById('textGuestNumber').value = '';
+            document.getElementById('textGuestAddress').value = '';
+
+            if (val === 'supermarket') {
+                document.getElementById('rowSupermarket').classList.remove('d-none');
+                document.getElementById('sectionSupermarketItems').classList.remove('d-none');
+            } else if (val === 'farmer') {
+                document.getElementById('rowFarmer').classList.remove('d-none');
+                document.getElementById('sectionFarmerItems').classList.remove('d-none');
+            } else if (val === 'nonreg') {
+                document.getElementById('rowNonReg').classList.remove('d-none');
+                document.getElementById('sectionFarmerItems').classList.remove('d-none');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

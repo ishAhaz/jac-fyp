@@ -1,0 +1,78 @@
+<!--
+=====================================================================
+  NAVBAR SNIPPET
+=====================================================================
+-->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success px-3 py-2 mb-0 shadow-sm" id="mainNavbar">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/dashboard">
+        <img src="/images/img/Logo.png" alt="Logo" width="32" height="32"
+             class="rounded-circle border border-white border-opacity-25">
+        <span class="fw-semibold">Janith Agro Center</span>
+    </a>
+
+    <div class="d-flex align-items-center gap-2 ms-auto">
+
+        <!-- Bell Icon with Dropdown -->
+        <div class="dropdown" id="notifDropdown">
+            <button class="btn btn-link text-white p-1 position-relative"
+                    data-bs-toggle="dropdown" aria-expanded="false"
+                    id="bellButton" title="Notifications">
+                <i class="fa-solid fa-bell fs-5"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      id="notifBadge" style="display:none; font-size:9px;">0</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow p-0"
+                style="width:320px; max-height:400px; overflow-y:auto;" id="notifList">
+                <li class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                    <span class="fw-semibold small">Notifications</span>
+                    <button class="btn btn-link btn-sm text-muted p-0 small"
+                            onclick="markAllRead()">Mark all read</button>
+                </li>
+                <li id="notifEmpty" class="text-center text-muted py-3 small">
+                    No notifications
+                </li>
+            </ul>
+        </div>
+        <!-- User Info Pill -->
+        <div class="dropdown">
+            <button class="btn btn-link text-white text-decoration-none p-1 d-flex align-items-center gap-2"
+                    data-bs-toggle="dropdown">
+                <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center overflow-hidden"
+                     style="width:32px;height:32px;" id="navUserAvatarWrap">
+                    <i class="fa-solid fa-user text-white" style="font-size:13px;" id="navUserIconFallback"></i>
+                    <img id="navUserAvatarImg"
+                         src=""
+                         alt="User"
+                         style="width:32px;height:32px;object-fit:cover;display:none;">
+                </div>
+                <span class="small d-none d-md-inline" id="navUsername" th:text="${loggedusername}">Loading...</span>
+                <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li><h6 class="dropdown-header" id="navRole">Role</h6></li>
+                <li><hr class="dropdown-divider my-1"></li>
+                <li>
+                    <a class="dropdown-item" href="/user/account">
+                        <i class="fa-solid fa-address-card me-2"></i>User Account
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider my-1"></li>
+                <li>
+                    <a class="dropdown-item text-danger" href="/logout" onclick="confirmLogout(event)">
+                        <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</nav>
+
+<!--
+=====================================================================
+  NAVBAR SNIPPET
+=====================================================================
+-->

@@ -1,0 +1,54 @@
+  .dropdown {
+    position: relative;
+    flex: 1;
+     width: 100%;
+  }
+
+  .dropdown-btn {
+    padding: 1px;
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  .dropdown-btn:hover{
+    border-radius:15px ;
+    transition: 1.5s;
+    background-color: #9cc5f3;
+  }
+
+  .dropdown-list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 100px;
+    overflow-y: auto;
+    z-index: 3;
+  }
+  
+
+  .dropdown-list.show {
+    display: block;
+  }
+
+  .dropdown-item {
+    padding: 2px;
+    display: flex;
+    gap: 2px;
+    cursor: pointer;
+  }
+
+  .modal-content.blurred {
+  filter: blur(4px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.modal.dimmed {
+  box-shadow: inset 0 0 0 9999px rgba(0,0,0,0.35);
+}
+
+#vegList,#fruitList{
+max-height:150px;
+overflow-y:auto;
+}

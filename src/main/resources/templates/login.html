@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Janith Agro Center</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/css/css-module/login.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+
+</head>
+<body>
+
+<div class="login-card">
+
+    <!-- Brand -->
+    <div class="login-brand">
+        <img src="/images/img/Logo.png" alt="Janith Agro Center Logo">
+        <h1>Janith Agro Center</h1>
+        <p>Crop and Compost Supply Chain Management System</p>
+    </div>
+
+
+    <!-- Error message (shown by JS if login fails) -->
+    <div class="login-error" id="loginError" style="display:none;">
+        <p id="loginErrorMsg">Invalid username or password.</p>
+    </div>
+
+    <!-- Form -->
+    <div class="form-group">
+        <label class="login-label" for="inputUsername">Username</label>
+        <input type="text" id="inputUsername" class="login-input"
+               placeholder="Enter username"
+               autocomplete="new-password"
+               readonly
+               onfocus="this.removeAttribute('readonly')">
+        <div class="field-error" id="usernameError"></div>
+    </div>
+
+    <div class="form-group">
+        <label class="login-label" for="inputPassword">Password</label>
+        <input type="password" id="inputPassword" class="login-input"
+               placeholder="Enter password"
+               autocomplete="new-password"
+               readonly
+               onfocus="this.removeAttribute('readonly')">
+        <div class="field-error" id="passwordError"></div>
+    </div>
+
+
+    <button class="btn-login" id="btnLogin" onclick="doLogin()">
+        Login
+    </button>
+
+    <a href="/forgot-password" class="forgot-link">forgot password?</a>
+
+    <div class="login-hint">
+        <span>Login as: Admin | Manager | Officer | Clerk | Driver</span><br>
+        Use your employee credentials
+    </div>
+
+</div>
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/login/login.js"></script>
+
+</body>
+</html>

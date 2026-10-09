@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compost Price Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content">
+<div class="container-fluid">
+
+    <!-- navigator -->
+    <div class="row div-navigator m-2 p-2">
+        <div class="col-12">
+            <p><a href="/dashboard">Dashboard</a> / Compost Module / Compost Price Management</p>
+        </div>
+    </div>
+
+    <!-- title area -->
+    <div class="row p-2 m-2 div-title">
+        <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+            <h1 id="idTitle">Compost Price Management</h1>
+        </div>
+    </div>
+
+
+    <!-- table area -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card card-body tableCard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="tablePrice">
+                        <thead class="table-dark" id="tableHeadId">
+                        <tr>
+                            <th>#</th>
+                            <th>Price ID</th>
+                            <th>Compost</th>
+                            <th>Ingredient Cost / kg</th>
+                            <th>Markup / kg</th>
+                            <th>Sale Price / kg</th>
+                            <th>Added Date</th>
+                            <th>User</th>
+                            <th>Status</th>
+                            <th>Modify</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBodyId"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </div>
+</div>
+<!--
+     Price Add / Edit Modal
+      -->
+<div class="modal" id="PriceAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Price</h2>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formPrice" onsubmit="return false" novalidate>
+
+                    <!-- Meta row -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Added Date & Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Last Updated Date & Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Price ID :</b></label>
+                            <p id="InputRegNo"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- Required mark -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!--  Compost / User -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectCompost" class="form-label fw-bold">
+                                Compost : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-leaf"></i></div>
+                                <select required id="selectCompost" class="form-select">
+                                    <option value="" selected disabled>Select Compost</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ingredients total price Per kg (auto-filled) / Markup Per kg -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textTotalPrice" class="form-label fw-bold">
+                                Total Price / Unit :
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-flask"></i></div>
+                                <input required type="number" step="0.01" id="textTotalPrice"
+                                       class="form-control" readonly
+                                       placeholder="Auto-filled when compost is selected">
+
+                            </div>
+
+                        </div>
+                        <div class="col-6">
+                            <label for="textMarkupPerKg" class="form-label fw-bold">
+                                Markup / Unit : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-percent"></i></div>
+                                <input type="number" step="0.01" min="0"
+                                       placeholder="Enter markup amount per kg"
+                                       required id="textMarkupPerKg" class="form-control">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--  Sale Price (auto-calculated) -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textSalePrice" class="form-label fw-bold">
+                                Sale Price / Unit :
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-tag"></i></div>
+                                <input type="number" step="0.01" id="textSalePrice"
+                                       class="form-control" readonly
+                                       placeholder="Auto-calculated">
+
+                            </div>
+
+                        </div>
+                        <div class="col-6">
+                            <label for="selectStatus" class="form-label fw-bold">Status : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-paper-plane"></i></span>
+                                </div>
+                                <select required class="form-select" id="selectStatus">
+                                    <option value="" selected disabled>Select Status</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <button type="reset"  class="btn btn-outline-primary  buttonClear"  id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info     buttonPrint"  id="buttonPrint">Print</button>
+
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     Print / View Modal
+     ================================================================ -->
+<div class="modal" id="PriceViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Price</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintPrice">
+                    <div class="card-header"><h1>Price Details</h1></div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr><th>Price ID</th>               <td id="tdPriceId"></td></tr>
+                            <tr><th>Compost</th>                <td id="tdCompost"></td></tr>
+                            <tr><th>Ingredient Cost / kg</th>   <td id="tdIngredientCostPerKg"></td></tr>
+                            <tr><th>Markup / kg</th>            <td id="tdMarkupPerKg"></td></tr>
+                            <tr><th>Sale Price / kg</th>        <td id="tdSalePrice"></td></tr>
+                            <tr><th>Added Date</th>             <td id="tdAddedDate"></td></tr>
+                            <tr><th>Updated Date</th>           <td id="tdUpdatedDate"></td></tr>
+                            <tr><th>User</th>                   <td id="tdUser"></td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printPriceRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================
+     Inline JS — Sale Price auto-calculation
+     ================================================================ -->
+<script>
+    /**
+     * Called by compostPrice.js after fetching ingredient cost from the backend.
+     * Pass the total ingredient cost per kg for the selected compost.
+     *
+     * Usage (in compostPrice.js):
+     *   setIngredientCost(response.ingredientCostPerKg);
+     */
+    function setIngredientCost(costPerKg) {
+        const costVal = parseFloat(costPerKg) || 0;
+        document.getElementById('textIngredientCostPerKg').value = costVal.toFixed(2);
+        recalculateSalePrice();
+    }
+
+    // function recalculateSalePrice() {
+    //     const cost   = parseFloat(document.getElementById('textIngredientCostPerKg').value) || 0;
+    //     const markup = parseFloat(document.getElementById('textMarkupPerKg').value)         || 0;
+    //     const sale   = cost + markup;
+    //     document.getElementById('textSalePrice').value = sale > 0 ? sale.toFixed(2) : '';
+    // }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* Recalculate whenever markup changes */
+        document.getElementById('textMarkupPerKg').addEventListener('input', recalculateSalePrice);
+
+        /* When compost changes → clear cost & sale price, then let JS file fetch the cost */
+        document.getElementById('selectCompost').addEventListener('change', function () {
+            document.getElementById('textIngredientCostPerKg').value = '';
+            document.getElementById('textSalePrice').value            = '';
+            /* compostPrice.js should listen to this same event and call setIngredientCost() */
+        });
+
+        /* Clear resets the calculated fields too */
+        document.getElementById('formPrice').addEventListener('reset', function () {
+            setTimeout(() => {
+                document.getElementById('textIngredientCostPerKg').value = '';
+                document.getElementById('textSalePrice').value            = '';
+            }, 0);
+        });
+    });
+</script>
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/compost/compostprice.js"></script>
+</body>
+</html>

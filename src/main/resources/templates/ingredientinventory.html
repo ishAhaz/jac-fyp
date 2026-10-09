@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredient Inventory</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <!-- for search -->
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+<div class="container-fluid">
+
+    <!-- navigator -->
+    <div class="row div-navigator m-2 p-2">
+        <div class="col-12">
+            <p><a href="/dashboard">Dashboard</a> /Ingredient Module /Ingredient Inventory</p>
+        </div>
+    </div>
+
+    <!-- title area -->
+    <div class="row p-2 m-2 div-title">
+        <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+            <h1 id="idTitle">Ingredient Inventory</h1>
+        </div>
+    </div>
+
+
+
+    <!-- table area -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card card-body tableCard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="tableIngredientInventory">
+                        <thead class="table-dark" id="tableHeadId">
+                        <tr>
+                            <th>#</th>
+                            <th>Ingredient</th>
+                            <th>Grade</th>
+                            <th>Current Stock </th>
+                            <th>Status</th>
+                            <th>View</th>
+
+                        </tr>
+                        </thead>
+                        <tbody id="tableBodyId">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /container-fluid -->
+    </div>
+</div>
+<div class="modal" id="InventoryTransactionModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="txnModalTitle">Stock Transactions</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                        <th>Reference</th>
+
+                    </tr>
+                    </thead>
+                    <tbody id="txnModalBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<!-- linked js file -->
+<script src="/js/ingredients/ingredientinventory.js"></script>
+</body>
+</html>

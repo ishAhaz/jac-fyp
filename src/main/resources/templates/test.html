@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Management</title>
+</head>
+<body>
+
+
+<!--// ============================================================-->
+<!--// SORT — status priority order (Pending, then Confirmed, then rest)-->
+<!--// ============================================================-->
+
+<!--const statusSortOrder = {-->
+<!--Pending:            1,-->
+<!--Confirmed:          2,-->
+<!--AwaitingPayment:    3,-->
+<!--PaymentSubmitted:   4,-->
+<!--PaymentVerified:    5,-->
+<!--Delivered:          6,-->
+<!--Cancelled:          7,-->
+<!--CancelledNoPayment: 8,-->
+<!--};-->
+
+<!--const sortSaleListPendingFirst = (list) => {-->
+<!--return [...list].sort((a, b) => {-->
+<!--const aRank = statusSortOrder[a.comsalestatus] ?? 99;-->
+<!--const bRank = statusSortOrder[b.comsalestatus] ?? 99;-->
+<!--return aRank - bRank;-->
+<!--});-->
+<!--};-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--SQL Queries: Workbench vs Repository-->
+
+<!--1. MySQL Workbench (SQL)-->
+<!--Uses SQL.-->
+<!--Talks directly to the MySQL database.-->
+<!--Uses table names and column names.-->
+
+<!--Example 1:-->
+
+<!--SELECT * FROM farmer;-->
+
+<!--Example 2:-->
+
+<!--SELECT name-->
+<!--FROM farmer-->
+<!--WHERE status = 'ACTIVE';-->
+
+
+
+
+
+<!--2. Spring Boot Repository-->
+<!--a) Derived Query-->
+<!--No SQL is written.-->
+<!--Spring generates the query automatically.-->
+
+<!--Example:-->
+
+<!--List<Farmer> findByStatus(Status status);-->
+<!--    b) JPQL (@Query)-->
+<!--    Uses Entity names and Java field names.-->
+<!--    Hibernate converts it into SQL.-->
+
+<!--    Example 1:-->
+
+<!--    @Query("SELECT f FROM Farmer f")-->
+<!--    List<Farmer> getAllFarmers();-->
+
+<!--        Example 2:-->
+
+<!--        @Query("SELECT f FROM Farmer f WHERE f.status = :status")-->
+<!--        List<Farmer> getByStatus(Status status);-->
+
+
+
+
+<!--            c) Native Query-->
+<!--            Uses real SQL inside the repository.-->
+<!--            Uses table names and column names.-->
+
+<!--            Example:-->
+
+<!--            @Query(value = "SELECT * FROM farmer WHERE status = 'ACTIVE'", nativeQuery = true)-->
+<!--            List<Farmer> getActiveFarmers();-->
+<!--                Main Difference-->
+<!--                SQL (Workbench)	JPQL (Repository)-->
+<!--                Uses table names	Uses entity names-->
+<!--                Uses column names	Uses Java field names-->
+<!--                Runs directly on MySQL	Converted to SQL by Hibernate-->
+<!--                Easy to Remember-->
+<!--                SQL → Table & Column-->
+<!--                JPQL → Entity & Java Field-->
+<!--                Derived Query → Method Name-->
+<!--                Native Query → Real SQL inside Repository-->
+    <h2>welcome</h2>
+</body>
+</html>

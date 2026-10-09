@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Report | Janith Agro Center</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div id="topbar"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="mainContent">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <a href="/dashboard" style="color:inherit;text-decoration:none;">Dashboard</a>
+            &rsaquo;
+            <a href="/crop" style="color:inherit;text-decoration:none;">Crop Management</a>
+            &rsaquo;
+            <span>Crop Report</span>
+        </div>
+
+        <!-- Page title -->
+        <div class="greeting">
+            <h2>Crop Report</h2>
+            <p>Summary and statistics of crops, farmers, and crop inventory.</p>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px,1fr));">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1e7dd;">
+                    <i class="fa-solid fa-seedling" style="color:#198754;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statTotalCrops">—</div>
+                    <div class="stat-label">Total Crops</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1e7dd;">
+                    <i class="fa-solid fa-circle-check" style="color:#198754;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statActiveCrops">—</div>
+                    <div class="stat-label">Active Crops</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#cff4fc;">
+                    <i class="fa-solid fa-user-tie" style="color:#0dcaf0;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statTotalFarmers">—</div>
+                    <div class="stat-label">Total Farmers</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#fff3cd;">
+                    <i class="fa-solid fa-boxes-stacked" style="color:#ffc107;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statInventoryItems">—</div>
+                    <div class="stat-label">Crops in Inventory</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#f8d7da;">
+                    <i class="fa-solid fa-triangle-exclamation" style="color:#dc3545;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statLowStock">—</div>
+                    <div class="stat-label">Low And Out of Stock</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="row g-3">
+
+            <!-- Crop status donut -->
+            <div class="col-12 col-lg-5">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-chart-pie"></i> Crop Status Breakdown
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="cropStatusChart"
+                                role="img"
+                                aria-label="Donut chart showing active vs inactive crops">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crop stock status donut -->
+            <div class="col-12 col-lg-7">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-warehouse"></i> Crop Stock Status
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="stockStatusChart"
+                                role="img"
+                                aria-label="Bar chart showing in stock vs low stock vs out of stock crops">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crop inventory levels horizontal bar -->
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-boxes-stacked"></i> Crop Inventory Levels
+                    </div>
+                    <div style="position:relative; width:100%; height:260px;">
+                        <canvas id="inventoryLevelChart"
+                                role="img"
+                                aria-label="Horizontal bar chart showing current stock quantity per crop">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Farmers per crop horizontal bar -->
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-user-tie"></i> Farmers per Crop
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="farmerPerCropChart"
+                                role="img"
+                                aria-label="Horizontal bar chart showing number of farmers per crop">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- end main-content -->
+</div><!-- end layout -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/chart/chart.umd.js"></script>
+<script>
+
+    // ── Sidebar dropdown toggle ───────────────────────────────────────────
+    function toggleSidebarDropdown(toggleId, subId) {
+        const toggle = document.getElementById(toggleId);
+        const sub    = document.getElementById(subId);
+        const isOpen = toggle.classList.contains('open');
+        document.querySelectorAll('.sidebar-dropdown-toggle.open').forEach(el => el.classList.remove('open'));
+        document.querySelectorAll('.sidebar-sub.open').forEach(el => el.classList.remove('open'));
+        if (!isOpen) { toggle.classList.add('open'); sub.classList.add('open'); }
+    }
+
+    // ── Chart instances ───────────────────────────────────────────────────
+    let cropStatusChart, stockStatusChart, inventoryLevelChart, farmerPerCropChart;
+
+    function buildCharts(data) {
+        const gridColor  = 'rgba(0,0,0,0.06)';
+        const labelColor = '#6c757d';
+
+        // Crop status donut
+        if (cropStatusChart) cropStatusChart.destroy();
+        cropStatusChart = new Chart(document.getElementById('cropStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Active', 'Inactive'],
+                datasets: [{
+                    data: [data.activeCrops, data.inactiveCrops],
+                    backgroundColor: ['#198754', '#dc3545'],
+                    borderWidth: 0,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { color: labelColor, font: { size: 12 }, padding: 16 }
+                    }
+                }
+            }
+        });
+
+        // Crop stock status bar (in stock / low stock / out of stock)
+        if (stockStatusChart) stockStatusChart.destroy();
+        stockStatusChart = new Chart(document.getElementById('stockStatusChart'), {
+            type: 'bar',
+            data: {
+                labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+                datasets: [{
+                    label: 'Crops',
+                    data: [data.inStockCount, data.lowStockCount, data.outOfStockCount],
+                    backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true }
+                }
+            }
+        });
+
+        // Crop inventory levels horizontal bar
+        const invLabels = data.byInventory.map(i => i.cropName);
+        const invData   = data.byInventory.map(i => i.quantity);
+
+        if (inventoryLevelChart) inventoryLevelChart.destroy();
+        inventoryLevelChart = new Chart(document.getElementById('inventoryLevelChart'), {
+            type: 'bar',
+            data: {
+                labels: invLabels,
+                datasets: [{
+                    label: 'Quantity in Stock',
+                    data: invData,
+                    backgroundColor: '#0dcaf0',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+
+        // Farmers per crop horizontal bar
+        const farmerCropLabels = data.byFarmerPerCrop.map(f => f.cropName);
+        const farmerCropData   = data.byFarmerPerCrop.map(f => f.farmerCount);
+
+        if (farmerPerCropChart) farmerPerCropChart.destroy();
+        farmerPerCropChart = new Chart(document.getElementById('farmerPerCropChart'), {
+            type: 'bar',
+            data: {
+                labels: farmerCropLabels,
+                datasets: [{
+                    label: 'Farmers',
+                    data: farmerCropData,
+                    backgroundColor: '#20c997',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+    }
+
+    // ── Load report data from backend ─────────────────────────────────────
+    function loadReport() {
+        fetch('/reports/cropreport/summary')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('statTotalCrops').textContent     = data.totalCrops       ?? '—';
+                document.getElementById('statActiveCrops').textContent    = data.activeCrops      ?? '—';
+                document.getElementById('statTotalFarmers').textContent   = data.totalFarmers      ?? '—';
+                document.getElementById('statInventoryItems').textContent = data.inventoryItemCount ?? '—';
+                document.getElementById('statLowStock').textContent       = (data.lowStockCount + data.outOfStockCount) ?? '—';
+                buildCharts(data);
+            })
+            .catch(() => {
+                // Fallback demo data so UI is visible without backend
+                buildCharts({
+                    totalCrops: 24, activeCrops: 19, inactiveCrops: 5,
+                    totalFarmers: 37, inventoryItemCount: 15,
+                    inStockCount: 10, lowStockCount: 3, outOfStockCount: 2,
+                    byInventory: [
+                        { cropName: 'Paddy',    quantity: 620 },
+                        { cropName: 'Maize',    quantity: 410 },
+                        { cropName: 'Tea',      quantity: 300 },
+                        { cropName: 'Coconut',  quantity: 180 },
+                        { cropName: 'Chili',    quantity: 90 },
+                        { cropName: 'Cinnamon', quantity: 35 }
+                    ],
+                    byFarmerPerCrop: [
+                        { cropName: 'Paddy',    farmerCount: 14 },
+                        { cropName: 'Maize',    farmerCount: 9 },
+                        { cropName: 'Tea',      farmerCount: 7 },
+                        { cropName: 'Coconut',  farmerCount: 5 },
+                        { cropName: 'Chili',    farmerCount: 3 },
+                        { cropName: 'Cinnamon', farmerCount: 2 }
+                    ]
+                });
+            });
+    }
+
+    loadReport();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privilege Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+
+   </head>
+
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+   <div class="container-fluid">
+
+        <!-- navigator -->
+        <div class="row div-navigator m-2 p-2">
+            <div class="col-12">
+                <p><a href="/dashboard">Dashboard</a> /Privilege Module /Privilege Management</p>
+            </div>
+        </div>
+
+        <!-- title area -->
+        <div class="row p-2 m-2 div-title">
+            <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                <h1 id="idTitle">Privilege Management</h1>
+            </div>
+
+        </div>
+
+        <!-- add new user button -->
+        <div class="row mt-2">
+            <div class="col text-end">
+                <button id="addNewPrivilegeId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#privilegeAddForm">
+                    Add New Privilege
+                </button>
+            </div>
+        </div>
+
+        <!-- table area -->
+        <div class="row mt-2">
+            <div class="col">
+                <div class="card card-body tableCard">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered table-striped" id="tablePrivilege">
+                            <thead class="table-dark" id="tableHeadId">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Role</th>
+                                    <th>Module</th>
+                                    <th>Select</th>
+                                    <th>Insert</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                    <th>Modify</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBodyId"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</div>
+    <!-- user add/edit form modal -->
+    <div class="modal" id="privilegeAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="formTitleEdit" class="d-none">Edit Privilege</h2>
+                    <h2 id="formTitleNew">Add New Privilege</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPrivilege" onsubmit="return false" novalidate>
+
+                        <!-- required mark -->
+                        <div class="row mt-1">
+
+                            <div class="col-4">
+                                <label for="regDate"><b>Added Date and Time :</b></label>
+                                <p id="regDate"></p>
+                            </div>
+                            <div class="col-4">
+                                <label for="updateDate"><b>Last Updated Date and Time :</b></label>
+                                <p id="updateDate"></p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mt-1">
+                            <div class="col" >
+                                <p>Required <span class="text-danger">*</span></p>
+                            </div>
+                        </div>
+                        <!-- Role -->
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <label for="selectRole" class="form-label fw-bold">Role : <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-text">
+                                        <span><i class="fa-solid fa-user-shield"></i></span>
+                                    </div>
+                                    <select id="selectRole" class="form-select" required>
+                                        <option value="" selected disabled>Select Role</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                               <div class="col-6">
+                                <label for="selectModule" class="form-label fw-bold">Module : <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-text">
+                                        <span><i class="fa-solid fa-table-cells-large"></i></span>
+                                    </div>
+                                    <select id="selectModule" class="form-select" required>
+                                        <option value="" selected disabled>Select Module</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+                        
+        
+
+                <!-- Roles -->
+               <div class="row mt-3">
+    <!-- Roles -->
+    <div class="col-3">
+        <div>
+        <label class="form-label fw-bold">Select : <span class="text-danger">*</span></label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="PrivSelect" value="" >
+            <label class="form-check-label" for="PrivSelect" id="labelSelect">Select Privilege Not Granted</label>
+        </div>
+    </div>
+
+      <div class="col-3">
+        <div>
+        <label class="form-label fw-bold">Insert : <span class="text-danger">*</span></label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="PrivInsert" value="admin">
+            <label class="form-check-label" for="PrivInsert" id="labelInsert">Insert Privilege Not Granted</label>
+        </div>
+      </div>
+    
+    <div class="col-3">
+        <div>
+        <label class="form-label fw-bold">Update : <span class="text-danger">*</span></label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="PrivUpdate" value="">
+            <label class="form-check-label" for="PrivUpdate" id="labelUpdate">Update Privilege Not Granted</label>
+        </div>
+    </div>
+    
+    <div class="col-3">
+        <div>
+        <label class="form-label fw-bold">Delete : <span class="text-danger">*</span></label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="PrivDelete" value="admin">
+            <label class="form-check-label" for="PrivDelete" id="labelDelete">Delete Privilege Not Granted</label>
+        </div>
+    </div>
+
+               </div>
+
+
+                        <div class="row mt-2">
+
+                            <div class="col-6">
+                                <label for="userId" class="form-label fw-bold">
+                                    User ID : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text">
+                                        <i class="fa-solid fa-user-tie"></i>
+                                    </div>
+                                    <input type="text" id="userId" class="form-control"
+                                           placeholder="Auto-fill" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Note -->
+                <div class="row mt-2">
+                    <div class="col">
+                        <label for="textPrivilegeNote" class="form-label fw-bold">Note :</label>
+                        <div class="input-group">
+                            <div class="input-group-text">
+                                <span><i class="fa-solid fa-note-sticky"></i></span>
+                            </div>
+                            <textarea placeholder="Enter note" id="textPrivilegeNote" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                        <button type="button" class="btn btn-outline-info buttonPrint"
+                            id="buttonPrint">Print</button>
+                        <button type="button" class="btn btn-outline-danger buttonDelete "
+                            id="buttonDelete">Delete</button>
+                    </div>
+                    <div class="col-6 text-end">
+                        <button class="btn btn-outline-warning buttonUpdate " id="buttonUpdate"
+                            type="button">Update</button>
+                        <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit"
+                            type="button">Submit</button>
+                    </div>
+                </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- user add/edit form modal end -->
+
+    <!-- print view modal -->
+    <div class="modal" id="PrivilegeViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>View User</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card" id="divCardPrintPrivilege">
+                        <div class="card-header">
+                            <h1>User Details</h1>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover table-bordered table-striped">
+                                <tr>
+                                    <th>Employee</th>
+                                    <td id="tdEmployee"></td>
+                                </tr>
+                                <tr>
+                                    <th>Username</th>
+                                    <td id="tdUsername"></td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td id="tdEmail"></td>
+                                </tr>
+                                <tr>
+                                    <th>Role</th>
+                                    <td id="tdRole"></td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td id="tdStatus"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-end">
+                    <button type="button" class="btn btn-info" onclick="printPrivilegeRecord()">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- print view modal end -->
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+   <!--linked js file  -->
+   <script src="/js/privilege/privilege.js"></script>
+
+</body>
+</html>

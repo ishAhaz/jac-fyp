@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Order and Procurement Report | Janith Agro Center</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div id="topbar"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <a href="/dashboard" style="color:inherit;text-decoration:none;">Dashboard</a>
+            &rsaquo;
+            <a href="/purchaseorder" style="color:inherit;text-decoration:none;">Purchase Order Management</a>
+            &rsaquo;
+            <span>Purchase Order &amp; Procurement Report</span>
+        </div>
+
+        <!-- Page title -->
+        <div class="greeting">
+            <h2>Purchase Order &amp; Procurement Report</h2>
+            <p>Summary and statistics of purchase orders, GRN, and quality check status.</p>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px,1fr));">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1e7dd;">
+                    <i class="fa-solid fa-file-invoice" style="color:#198754;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statTotalPO">—</div>
+                    <div class="stat-label">Total Purchase Orders</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#cff4fc;">
+                    <i class="fa-solid fa-truck-loading" style="color:#0dcaf0;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statOpenPO">—</div>
+                    <div class="stat-label">Open / In-Progress POs</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#fff3cd;">
+                    <i class="fa-solid fa-clipboard-list" style="color:#ffc107;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statPendingGRN">—</div>
+                    <div class="stat-label">GRN Records Pending</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#f8d7da;">
+                    <i class="fa-solid fa-magnifying-glass-chart" style="color:#dc3545;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statPendingQC">—</div>
+                    <div class="stat-label">Quality Checks Pending</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1e7dd;">
+                    <i class="fa-solid fa-circle-check" style="color:#198754;"></i>
+                </div>
+                <div>
+                    <div class="stat-value" id="statCompletedPO">—</div>
+                    <div class="stat-label">Completed Purchase Orders</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="row g-3">
+
+            <!-- Purchase order status donut -->
+            <div class="col-12 col-lg-5">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-chart-pie"></i> Purchase Order Status Breakdown
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="poStatusChart"
+                                role="img"
+                                aria-label="Donut chart showing purchase order status breakdown">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending workflow bar (GRN vs QC) -->
+            <div class="col-12 col-lg-7">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-hourglass-half"></i> Pending Workflow Items
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="pendingWorkflowChart"
+                                role="img"
+                                aria-label="Bar chart showing pending GRN and quality check counts">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRN status breakdown horizontal bar -->
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-clipboard-list"></i> GRN Records by Status
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="grnStatusChart"
+                                role="img"
+                                aria-label="Horizontal bar chart showing GRN record counts by status">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quality check status horizontal bar -->
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-card-title">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> Quality Checks by Status
+                    </div>
+                    <div style="position:relative; width:100%; height:240px;">
+                        <canvas id="qcStatusChart"
+                                role="img"
+                                aria-label="Horizontal bar chart showing quality check counts by status">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- end main-content -->
+</div><!-- end layout -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/chart/chart.umd.js"></script>
+<script>
+
+    // ── Sidebar dropdown toggle ───────────────────────────────────────────
+    function toggleSidebarDropdown(toggleId, subId) {
+        const toggle = document.getElementById(toggleId);
+        const sub    = document.getElementById(subId);
+        const isOpen = toggle.classList.contains('open');
+        document.querySelectorAll('.sidebar-dropdown-toggle.open').forEach(el => el.classList.remove('open'));
+        document.querySelectorAll('.sidebar-sub.open').forEach(el => el.classList.remove('open'));
+        if (!isOpen) { toggle.classList.add('open'); sub.classList.add('open'); }
+    }
+
+    // ── Chart instances ───────────────────────────────────────────────────
+    let poStatusChart, pendingWorkflowChart, grnStatusChart, qcStatusChart;
+
+    function buildCharts(data) {
+        const gridColor  = 'rgba(0,0,0,0.06)';
+        const labelColor = '#6c757d';
+
+        // Purchase order status donut
+        if (poStatusChart) poStatusChart.destroy();
+        poStatusChart = new Chart(document.getElementById('poStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Open', 'Completed', 'Cancelled'],
+                datasets: [{
+                    data: [data.openPOCount, data.completedPOCount, data.cancelledPOCount],
+                    backgroundColor: ['#0dcaf0', '#198754', '#dc3545'],
+                    borderWidth: 0,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { color: labelColor, font: { size: 12 }, padding: 16 }
+                    }
+                }
+            }
+        });
+
+        // Pending GRN vs Pending QC bar
+        if (pendingWorkflowChart) pendingWorkflowChart.destroy();
+        pendingWorkflowChart = new Chart(document.getElementById('pendingWorkflowChart'), {
+            type: 'bar',
+            data: {
+                labels: ['GRN Pending', 'Quality Check Pending'],
+                datasets: [{
+                    label: 'Pending Count',
+                    data: [data.pendingGRNCount, data.pendingQCCount],
+                    backgroundColor: ['#ffc107', '#dc3545'],
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true }
+                }
+            }
+        });
+
+        // GRN by status horizontal bar
+        const grnLabels = data.byGRNStatus.map(g => g.status);
+        const grnData   = data.byGRNStatus.map(g => g.count);
+
+        if (grnStatusChart) grnStatusChart.destroy();
+        grnStatusChart = new Chart(document.getElementById('grnStatusChart'), {
+            type: 'bar',
+            data: {
+                labels: grnLabels,
+                datasets: [{
+                    label: 'GRN Records',
+                    data: grnData,
+                    backgroundColor: '#20c997',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+
+        // Quality check by status horizontal bar
+        const qcLabels = data.byQCStatus.map(q => q.status);
+        const qcData   = data.byQCStatus.map(q => q.count);
+
+        if (qcStatusChart) qcStatusChart.destroy();
+        qcStatusChart = new Chart(document.getElementById('qcStatusChart'), {
+            type: 'bar',
+            data: {
+                labels: qcLabels,
+                datasets: [{
+                    label: 'Quality Checks',
+                    data: qcData,
+                    backgroundColor: '#6f42c1',
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor }, beginAtZero: true },
+                    y: { ticks: { color: labelColor, font: { size: 11 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+    }
+
+    // ── Load report data from backend ─────────────────────────────────────
+    function loadReport() {
+        fetch('/reports/purchaseorderreport/summary')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('statTotalPO').textContent      = data.totalPOCount ?? '—';
+                document.getElementById('statOpenPO').textContent       = data.openPOCount ?? '—';
+                document.getElementById('statPendingGRN').textContent   = data.pendingGRNCount ?? '—';
+                document.getElementById('statPendingQC').textContent    = data.pendingQCCount ?? '—';
+                document.getElementById('statCompletedPO').textContent  = data.completedPOCount ?? '—';
+                buildCharts(data);
+            })
+            .catch(() => {
+                // Fallback demo data so UI is visible without backend
+                buildCharts({
+                    totalPOCount: 58, openPOCount: 21, completedPOCount: 33, cancelledPOCount: 4,
+                    pendingGRNCount: 9, pendingQCCount: 6,
+                    byGRNStatus: [
+                        { status: 'Pending',   count: 9 },
+                        { status: 'Approved',  count: 27 },
+                        { status: 'Rejected',  count: 3 }
+                    ],
+                    byQCStatus: [
+                        { status: 'Pending',  count: 6 },
+                        { status: 'Passed',   count: 24 },
+                        { status: 'Failed',   count: 5 }
+                    ]
+                });
+            });
+    }
+
+    loadReport();
+
+</script>
+</body>
+</html>

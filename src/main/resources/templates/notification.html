@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+
+            <!-- navigator -->
+            <div class="row div-navigator m-2 p-2">
+                <div class="col-12">
+                    <p><a href="/dashboard">Dashboard</a> /Notification Module /Notification Management</p>
+                </div>
+            </div>
+
+            <!-- title area -->
+            <div class="row p-2 m-2 div-title">
+                <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                    <h1 id="idTitle">Notification Management</h1>
+                </div>
+            </div>
+
+            <!-- add new notification button -->
+            <div class="row mt-2">
+                <div class="col text-end">
+                    <button id="addNewNotificationId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NotificationAddForm">Add New Notification</button>
+                </div>
+            </div>
+
+            <!-- table area -->
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="card card-body tableCard">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tableNotification">
+                                <thead class="table-dark" id="tableHeadId">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Type</th>
+                                    <th>Title</th>
+                                    <th>Message</th>
+                                    <th>Role</th>
+                                    <th>Created By</th>
+                                    <th>Created At</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBodyId">
+                                <!-- rows loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Notification Add / Edit Form Modal -->
+
+<div class="modal" id="NotificationAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Notification</h2>
+                <h2 id="formTitleNew">Add New Notification</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formNotification" onsubmit="return false" novalidate>
+
+                    <!-- Meta info row -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label for="regDate"><b>Registration Date and Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label for="updateDate"><b>Last Updated Date and Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label for="InputRegNo"><b>Notification ID :</b></label>
+                            <p id="InputRegNo"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Type -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textType" class="form-label fw-bold">Type : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-bell"></i></span>
+                                </div>
+                                <input type="text" placeholder="e.g. PO_PENDING_APPROVAL" required id="textType" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textTitle" class="form-label fw-bold">Title : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-circle-check"></i></span>
+                                </div>
+                                <input type="text" placeholder="Type a title" required id="textTitle" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <label for="textMessage" class="form-label fw-bold">Message : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-comment-dots"></i></span>
+                                </div>
+                                <textarea placeholder="Enter Notification Message" required id="textMessage" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectRole" class="form-label fw-bold">Target Role : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user-tag"></i></span>
+                                </div>
+                                <select required id="selectRole" class="form-select">
+                                    <option value="" selected disabled>Please select role..</option>
+                                    <!-- options loaded dynamically -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Created By -->
+                        <div class="col-6">
+                            <label for="selectCreatedBy" class="form-label fw-bold">Created By :</label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user"></i></span>
+                                </div>
+                                <input type="text" id="selectCreatedBy" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Notification Add / Edit Form Modal END -->
+
+
+<!-- Notification View / Print Modal -->
+
+<div class="modal" id="NotificationViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Notification</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintNotification">
+                    <div class="card-header">
+                        <h1>Notification Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr>
+                                <th>Notification ID</th>
+                                <td id="tdNotificationId"></td>
+                            </tr>
+                            <tr>
+                                <th>Type</th>
+                                <td id="tdType"></td>
+                            </tr>
+                            <tr>
+                                <th>Message</th>
+                                <td id="tdMessage"></td>
+                            </tr>
+                            <tr>
+                                <th>Target Role</th>
+                                <td id="tdRole"></td>
+                            </tr>
+                            <tr>
+                                <th>Created By</th>
+                                <td id="tdCreatedBy"></td>
+                            </tr>
+                            <tr>
+                                <th>Created At</th>
+                                <td id="tdCreatedAt"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printNotificationRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Notification View / Print Modal END -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/notifications/notification.js"></script>
+
+</body>
+</html>

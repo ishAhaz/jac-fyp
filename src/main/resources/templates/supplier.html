@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <!-- for search -->
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+
+            <!-- navigator -->
+            <div class="row div-navigator m-2 p-2">
+                <div class="col-12">
+                    <p><a href="/dashboard">Dashboard</a> /Ingredient Module /Supplier Management</p>
+                </div>
+            </div>
+
+            <!-- title area -->
+            <div class="row p-2 m-2 div-title">
+                <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                    <h1 id="idTitle">Supplier Management</h1>
+                </div>
+            </div>
+
+            <!-- add new button -->
+            <div class="row mt-2">
+                <div class="col text-end">
+                    <button id="addNewSupplierId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SupplierAddForm">Add New Supplier</button>
+                </div>
+            </div>
+
+            <!-- table area -->
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="card card-body tableCard">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tableSupplier">
+                                <thead class="table-dark" id="tableHeadId">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Supplier ID</th>
+                                    <th>Contact Person</th>
+                                    <th>Company Name</th>
+                                    <th>Mobile No</th>
+                                    <th>Email</th>
+                                    <th>Ingredients</th>
+                                    <th>Status</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBodyId">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- end container-fluid -->
+    </div>
+</div>
+
+<!-- SUPPLIER ADD / EDIT FORM MODAL  -->
+<div class="modal" id="SupplierAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Supplier</h2>
+                <h2 id="formTitleNew">Add New Supplier</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formSupplier" onsubmit="return false" novalidate>
+
+                    <!-- Meta row: dates + reg no -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Registration Date & Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Last Updated Date & Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Supplier ID :</b></label>
+                            <p id="InputSupplierId"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- Required mark -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Company Name / Contact Person -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textContactPerson" class="form-label fw-bold">Contact Person : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user-tie"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Contact Person" required id="textContactPerson" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textCompanyName" class="form-label fw-bold">Company Name : </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-building"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Company Name"  id="textCompanyName" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Mobile / Email -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textMobile" class="form-label fw-bold">Mobile No : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-mobile-screen-button"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Mobile Number" required id="textMobile" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textEmail" class="form-label fw-bold">Email : </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-envelope"></i></span>
+                                </div>
+                                <input type="email" placeholder="Enter Email"  id="textEmail" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Name / Branch Name -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textBankName" class="form-label fw-bold">Bank Name : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-building-columns"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Bank Name" required id="textBankName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textBranchName" class="form-label fw-bold">Branch Name : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-code-branch"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Branch Name" required id="textBranchName" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Branch No / Bank Account No -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textBranchNo" class="form-label fw-bold">Branch No : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-list-ol"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Branch No" required id="textBranchNo" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textBankAccNo" class="form-label fw-bold">Bank Account No : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-credit-card"></i></span>
+                                </div>
+                                <input type="text"  placeholder="Enter Bank Account No" required id="textBankAccNo" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--  Status /User-->
+                    <div class="row mt-2">
+
+                        <div class="col-6" id="supplierStatusCol">
+                            <label for="selectStatus" class="form-label fw-bold">Supplier Status : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user-check"></i></span>
+                                </div>
+                                <select required id="selectStatus" class="form-select">
+                                    <option value="" selected disabled>Select Supplier Status</option>
+                                    <!-- populated via JS -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="textAddress" class="form-label fw-bold">Address : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-location-dot"></i></span>
+                                </div>
+                                <textarea placeholder="Enter Address" id="textAddress" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--
+                        REMOVED: "Supplier Ingredients" sub-section — Ingredient Add Row
+                        (selectIngredientItem / textPricePerUnit / buttonAddIngredientItem)
+                        and the sub-table (tableSupplierIngredients / tableSupplierIngredientsBody).
+                        Suppliers now pick their own ingredients and set their own selling price
+                        from the My Account page (Ingredients & Pricing tab), which submits to
+                        /user/account/me/ingredients and reuses the same reconciliation logic
+                        that used to live in this form.
+                    -->
+
+                    <!-- Action Buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div><!-- modal-body -->
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div>
+<!--  END SUPPLIER MODAL  -->
+
+
+<!--  PRINT VIEW MODAL  -->
+<div class="modal" id="SupplierViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Supplier</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintSupplier">
+                    <div class="card-header">
+                        <h1>Supplier Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr>
+                                <th>Company Name</th>
+                                <td id="tdCompanyName"></td>
+                            </tr>
+                            <tr>
+                                <th>Contact Person</th>
+                                <td id="tdContactPerson"></td>
+                            </tr>
+                            <tr>
+                                <th>Mobile No</th>
+                                <td id="tdMobile"></td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td id="tdEmail"></td>
+                            </tr>
+                            <tr>
+                                <th>Address</th>
+                                <td id="tdAddress"></td>
+                            </tr>
+                            <tr>
+                                <th>Bank Name</th>
+                                <td id="tdBankName"></td>
+                            </tr>
+                            <tr>
+                                <th>Branch Name</th>
+                                <td id="tdBranchName"></td>
+                            </tr>
+                            <tr>
+                                <th>Branch No</th>
+                                <td id="tdBranchNo"></td>
+                            </tr>
+                            <tr>
+                                <th>Bank Account No</th>
+                                <td id="tdBankAccNo"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td id="tdStatus"></td>
+                            </tr>
+                        </table>
+
+                        <!-- Supplier Ingredients print sub-table — still shown here as a
+                             read-only summary, even though ingredients are now edited
+                             from My Account -->
+                        <h5 class="fw-bold mt-3">Supplier Ingredients</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tablePrintSupplierIngredients">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ingredient</th>
+                                    <th>Price Per Unit</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tablePrintSupplierIngredientsBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printSupplierRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END PRINT VIEW MODAL -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<!-- linked js file -->
+<script src="/js/ingredients/supplier.js"></script>
+</body>
+</html>

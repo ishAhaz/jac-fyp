@@ -1,0 +1,58 @@
+body {
+    background-image: linear-gradient(to right, #FF9F80, #FFBC76, #6C9D8F, #4B7F7D, #B2C3D3);
+}
+
+#firstTable{
+    border: solid 2px black;
+    border-radius: 10px;
+    width: 75%;
+}
+
+
+input:hover{
+    border-radius: 10px;
+    transition: 0.70s;
+    background-color: rgb(198, 245, 198);
+}
+
+select,input,textarea{
+    background-color: antiquewhite;
+    border: none;
+}
+select:hover{
+    border-radius: 10px;
+    transition: 0.70s;
+    background-color: rgb(198, 245, 198);
+}
+#tableHead{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 200%;  
+}
+#tableHead:hover{
+    color: rgba(8, 78, 8, 0.89);
+    transition: 1s;
+}
+label:hover{
+    font-weight: bold;
+    transition: 1s;
+}
+textarea:hover{
+    border-radius: 10px;
+    transition: 0.70s;
+    background-color: rgb(198, 245, 198);  
+}
+#btnSubmit{
+    background-color: rgb(18, 124, 24);
+}
+#btnUpdate{
+    background-color: aqua;
+}
+#btnClear{
+    background-color: #FF9F80;
+}
+#tableDetails{
+   
+    padding: 8px;
+    border-collapse: collapse;
+    text-align: left; /* Left-align text inside cells */
+}

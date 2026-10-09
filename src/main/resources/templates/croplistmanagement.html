@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop List Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content">
+<div class="container-fluid">
+
+    <!-- navigator -->
+    <div class="row div-navigator m-2 p-2">
+        <div class="col-12">
+            <p><a href="/dashboard">Dashboard</a> /Crop Module /Crop List Management</p>
+        </div>
+    </div>
+
+    <!-- title area -->
+    <div class="row p-2 m-2 div-title">
+        <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+            <h1 id="idTitle">Crop List Management</h1>
+        </div>
+    </div>
+
+    <!-- add new button -->
+    <div class="row mt-2">
+        <div class="col text-end">
+            <button id="addNewCropId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CropAddForm">Add New Crop</button>
+        </div>
+    </div>
+
+    <!-- table area -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card card-body tableCard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="tableCrop">
+                        <thead class="table-dark" id="tableHeadId">
+                        <tr>
+                            <th>#</th>
+                            <th>Crop ID</th>
+                            <th>Name</th>
+                            <th>Status</th>
+
+                            <th>Modify</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBodyId">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </div>
+</div>
+<!-- Crop Add/Edit Form Modal -->
+<div class="modal" id="CropAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Crop</h2>
+                <h2 id="formTitleNew">Add New Crop</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCrop" onsubmit="return false" novalidate>
+
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Registration Date and Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Last Updated Date and Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Crop ID :</b></label>
+                            <p id="InputRegNo"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- required mark -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Name / Status -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textCropName" class="form-label fw-bold">Crop Name : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-seedling"></i>
+                                </div>
+                                <input type="text" placeholder="Enter Crop Name" required id="textCropName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="selectStatus" class="form-label fw-bold">Crop Status : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+                                <select required class="form-select" id="selectStatus">
+                                    <option value="" selected disabled>Select Crop Status</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Crop Add/Edit Form Modal end -->
+
+<!-- Print View Modal -->
+<div class="modal" id="CropListViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Crop</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintCrop">
+                    <div class="card-header">
+                        <h1>Crop Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr>
+                                <th>Crop ID</th>
+                                <td id="tdCropId"></td>
+                            </tr>
+                            <tr>
+                                <th>Crop Name</th>
+                                <td id="tdName"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td id="tdStatus"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printCropRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Print View Modal end -->
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/crop/croplistmanagement.js"></script>
+</body>
+</html>

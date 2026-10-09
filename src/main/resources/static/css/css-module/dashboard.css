@@ -1,0 +1,376 @@
+/* =====================================================================
+   dashboard.css
+   Save to: /css/css-module/dashboard.css
+   ===================================================================== */
+
+/* ── BODY & PAGE ── */
+body {
+    margin: 0;
+    background: #f4f6f4;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.layout {
+    display: flex;
+    height: calc(100vh - 58px); /* 58px = navbar height */
+    overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+    width: 220px;
+    background: #1e2a1e;          /* dark green-black */
+    border-right: 1px solid #2d3d2d;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* thin custom scrollbar for sidebar */
+.sidebar::-webkit-scrollbar          { width: 4px; }
+.sidebar::-webkit-scrollbar-track   { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb   { background: #3a4d3a; border-radius: 4px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: #198754; }
+
+.sidebar-section { padding: 12px 0 4px; }
+
+.sidebar-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #5a7a5a;               /* muted green */
+    padding: 0 16px 6px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    font-size: 13px;
+    color: #9db89d;               /* soft grey-green text */
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all .15s;
+    cursor: pointer;
+}
+
+.sidebar-item:hover {
+    background: #253325;
+    color: #52c97a;               /* bright green on hover */
+    text-decoration: none;
+    border-left-color: #3a7a3a;
+}
+
+.sidebar-item.active {
+    background: #14401f;          /* deep green */
+    color: #4ade80;               /* vivid green */
+    border-left-color: #198754;
+    font-weight: 600;
+}
+
+.sidebar-item .si-icon {
+    width: 18px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.sidebar-item .si-badge {
+    margin-left: auto;
+    background: #dc3545;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+.sidebar-divider {
+    border: none;
+    border-top: 1px solid #2a3a2a;
+    margin: 4px 0;
+}
+
+/* ── MAIN CONTENT ── */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+}
+
+/* ── BREADCRUMB ── */
+.breadcrumb-bar {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 14px;
+}
+.breadcrumb-bar span {
+    color: #198754;
+    font-weight: 500;
+}
+
+/* ── GREETING ── */
+.greeting { margin-bottom: 20px; }
+.greeting h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #212529;
+    margin: 0 0 2px;
+}
+.greeting p {
+    font-size: 13px;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* ── STAT CARDS ── */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px 18px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* ── SECTION CARDS ── */
+.section-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    padding: 10px 15px;
+    margin-bottom: 16px;
+}
+
+.section-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-card-title i { color: #198754; }
+
+/* ── MINI TABLE ── */
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.mini-table th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #6c757d;
+    padding: 6px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+}
+.mini-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #f8f8f8;
+    color: #495057;
+}
+.mini-table tr:last-child td { border-bottom: none; }
+.mini-table tr:hover td     { background: #f8f9fa; }
+
+/* ── STATUS PILLS ── */
+.pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.pill-assigned  { background: #fff3cd; color: #664d03; }
+.pill-progress  { background: #cff4fc; color: #055160; }
+.pill-completed { background: #d1e7dd; color: #0f5132; }
+.pill-pending   { background: #f8d7da; color: #842029; }
+.pill-paid      { background: #d1e7dd; color: #0f5132; }
+.pill-partial   { background: #fff3cd; color: #664d03; }
+
+
+
+/* ── SIDEBAR DROPDOWNS ── */
+
+/* The toggle row — reuses .sidebar-item but needs flex space-between */
+.sidebar-dropdown-toggle {
+    justify-content: space-between;
+    user-select: none;
+}
+
+.sidebar-dropdown-toggle .si-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Chevron rotates when open */
+.si-chevron {
+    font-size: 9px;
+    color: #3d5c3d;
+    transition: transform 0.25s ease, color 0.15s;
+    flex-shrink: 0;
+}
+.sidebar-dropdown-toggle.open .si-chevron {
+    transform: rotate(90deg);
+    color: #52c97a;
+}
+.sidebar-dropdown-toggle.open {
+    background: #253325;
+    color: #52c97a;
+    border-left-color: #3a7a3a;
+}
+
+/* Collapsible sub-menu container */
+.sidebar-sub {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #172217;          /* slightly darker than sidebar */
+}
+.sidebar-sub.open {
+    max-height: 400px;
+}
+
+/* Sub-item links */
+.sidebar-subitem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px 7px 38px;  /* deep indent */
+    font-size: 12px;
+    color: #6b8f6b;               /* dimmer than parent items */
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    position: relative;
+}
+
+/* Connector line on the left */
+.sidebar-subitem::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 1px;
+    background: #3a4d3a;
+}
+
+.sidebar-subitem:hover {
+    background: #1e2e1e;
+    color: #52c97a;
+    text-decoration: none;
+    border-left-color: #2d5a2d;
+}
+.sidebar-subitem:hover::before {
+    background: #52c97a;
+}
+
+.sidebar-subitem.active {
+    background: #14401f;
+    color: #4ade80;
+    border-left-color: #198754;
+    font-weight: 600;
+}
+.sidebar-subitem.active::before {
+    background: #4ade80;
+}
+
+.sidebar-subitem .si-icon {
+    width: 14px;
+    text-align: center;
+    font-size: 10px;
+    opacity: 0.75;
+}
+
+/* ── QUICK ACTIONS (role-based) — vertical stacked list ── */
+.quick-actions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px;
+}
+
+.quick-action-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #acfb63;
+    border: 1px solid #106c10;
+    text-decoration: none;
+    color: #212529;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    width: 100%;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.quick-action-btn:hover {
+    background: #d7f0c4;
+    border-color: #198754;
+    color: #000000;
+    text-decoration: none;
+}
+
+.quick-action-btn i {
+    font-size: 15px;
+    color: #198754;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.quick-action-btn span {
+    flex: 1;
+}

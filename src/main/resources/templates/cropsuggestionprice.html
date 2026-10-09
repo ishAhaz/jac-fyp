@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Suggestion Price Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <!-- for search -->
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+<div class="container-fluid">
+
+    <!-- navigator -->
+    <div class="row div-navigator m-2 p-2">
+        <div class="col-12">
+            <p><a href="/dashboard">Dashboard</a> /Crop Module /Crop Suggestion Price Management</p>
+        </div>
+    </div>
+
+    <!-- title area -->
+    <div class="row p-2 m-2 div-title">
+        <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+            <h1 id="idTitle">Crop Suggestion Price Management</h1>
+        </div>
+    </div>
+
+    <!-- table area -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card card-body tableCard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="tableSuggestionPrice">
+                        <thead class="table-dark" id="tableHeadId">
+                        <tr>
+                            <th>#</th>
+                            <th>Farmer</th>
+                            <th>Crop</th>
+                            <th>Suggested Date</th>
+                            <th>Farmer Price Per Kg (Rs)</th>
+                            <th>Suggested Price Per Kg (Rs)</th>
+                            <th>Status</th>
+                            <th>Review Date</th>
+                            <th>User ID</th>
+                            <th>Modify</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBodyId">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /container-fluid -->
+    </div>
+</div>
+
+<!-- SUGGESTION PRICE EDIT MODAL -->
+
+<div class="modal" id="SuggestionPriceAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Suggestion Price</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formSuggestionPrice" onsubmit="return false" novalidate>
+
+                    <!-- reg info row -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Suggest Date & Time :</b></label>
+                            <p id="suggestDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Review or Last Updated Date & Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- required note -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Farmer / Crop -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="inputFarmer" class="form-label fw-bold">
+                                Farmer : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-truck-field"></i>
+                                </div>
+                                <input type="text" step="0.01" min="0" required
+                                       placeholder="Auto-fill"
+                                       id="inputFarmer" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="inputCrop" class="form-label fw-bold">
+                                Crop : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-seedling"></i>
+                                </div>
+                                <input type="text" step="0.01" min="0" required
+                                       placeholder="Auto-fill"
+                                       id="inputCrop" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Farmer price/Suggested price   -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="numberFarmerPrice" class="form-label fw-bold">
+                                Farmer Price Per Kg (Rs) :<span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-coins"></i>
+                                </div>
+                                <input type="number" step="0.01" min="0"
+                                       placeholder="Auto-fill"
+                                       id="numberFarmerPrice" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="numberSuggestedPrice" class="form-label fw-bold">
+                                Suggested Price Per Kg (Rs) : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-tag"></i>
+                                </div>
+                                <input type="number" step="0.01" min="0" required
+                                       placeholder="Auto-fill suggested price per kg"
+                                       id="numberSuggestedPrice" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--  user /status-->
+                    <div class="row mt-2">
+
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="selectStatus" class="form-label fw-bold">
+                                Status : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-toggle-on"></i>
+                                </div>
+                                <select id="selectStatus" class="form-select" required>
+                                    <option value="" selected disabled>Select Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Note -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="textNote" class="form-label fw-bold">Note :</label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-note-sticky"></i>
+                                </div>
+                                <textarea placeholder="Enter any note" id="textNote"
+                                          class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- action buttons -->
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div><!-- /modal-body -->
+        </div>
+    </div>
+</div>
+<!-- END MODAL -->
+
+
+<!-- PRINT VIEW MODAL -->
+<div class="modal" id="SuggestionPriceViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Suggestion Price</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintSuggestionPrice">
+                    <div class="card-header">
+                        <h1>Crop Suggestion Price Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+
+                            <tr>
+                                <th>Farmer</th>
+                                <td id="tdViewFarmer"></td>
+                            </tr>
+                            <tr>
+                                <th>Crop</th>
+                                <td id="tdViewCrop"></td>
+                            </tr>
+                            <tr>
+                                <th>Suggested Date and Time</th>
+                                <td id="tdViewSuggestedDatetime"></td>
+                            </tr>
+                            <tr>
+                                <th>Review Date and Time</th>
+                                <td id="tdViewReviewDatetime"></td>
+                            </tr>
+                            <tr>
+                                <th>Suggested Price (Rs./kg)</th>
+                                <td id="tdViewSuggestedPrice"></td>
+                            </tr>
+
+                            <tr>
+                                <th>Farmer Price (Rs.)</th>
+                                <td id="tdViewFarmerPrice"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td id="tdViewStatus"></td>
+                            </tr>
+                            <tr>
+                                <th>Note</th>
+                                <td id="tdViewNote"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printSuggestionPriceRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END PRINT VIEW MODAL -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<!-- linked js file -->
+<script src="/js/crop/cropsuggestionprice.js"></script>
+</body>
+</html>

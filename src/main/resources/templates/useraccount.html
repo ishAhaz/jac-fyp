@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <style>
+        /* ============================================================
+           Account page — scoped additions, follows D5-01 tokens
+        ============================================================ */
+        .acc-avatar-wrap{
+            position:relative;
+            width:120px;height:120px;
+            margin:0 auto;
+        }
+        .acc-avatar-wrap img,
+        .acc-avatar-wrap .acc-avatar-fallback{
+            width:120px;height:120px;
+            border-radius:50%;
+            object-fit:cover;
+            border:3px solid #fff;
+            box-shadow:0 0 0 3px var(--bs-success);
+        }
+        .acc-avatar-fallback{
+            display:flex;align-items:center;justify-content:center;
+            background:#e9f5ee;color:var(--bs-success);
+            font-size:42px;
+        }
+        .acc-avatar-edit{
+            position:absolute;bottom:2px;right:2px;
+            width:34px;height:34px;border-radius:50%;
+            background:var(--bs-success);color:#fff;
+            display:flex;align-items:center;justify-content:center;
+            border:2px solid #fff;cursor:pointer;
+            font-size:13px;
+        }
+        .acc-avatar-edit:hover{ filter:brightness(0.92); }
+        .acc-status-dot{
+            width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px;
+        }
+        .acc-status-Active{ background:#28a745; }
+        .acc-status-Inactive{ background:#adb5bd; }
+        .acc-status-Pending{ background:#ffc107; }
+        .acc-role-badge{
+            font-weight:500;letter-spacing:.2px;
+        }
+        .acc-type-badge{
+            font-size:.72rem;font-weight:600;letter-spacing:.4px;
+            text-transform:uppercase;padding:.3em .6em;
+        }
+        .acc-type-EMPLOYEE{ background:#e7f1ff;color:#0d6efd; }
+        .acc-type-FARMER{ background:#e9f5ee;color:#198754; }
+        .acc-type-SUPERMARKET{ background:#fff3e0;color:#fd7e14; }
+        .acc-type-SUPPLIER{ background:#f3e8fd;color:#8540e8; }
+        .acc-nav .nav-link{
+            color:#495057;border-radius:8px;padding:.55rem .9rem;
+            display:flex;align-items:center;gap:.6rem;
+        }
+        .acc-nav .nav-link.active{
+            background:var(--bs-success);color:#fff;
+        }
+        .acc-nav .nav-link i{ width:18px;text-align:center; }
+        .acc-readonly-row{
+            display:flex;justify-content:space-between;
+            padding:.5rem 0;border-bottom:1px solid #eee;font-size:.92rem;
+        }
+        .acc-readonly-row:last-child{ border-bottom:none; }
+        .acc-readonly-row span:first-child{ color:#6c757d; }
+        .acc-pw-strength{
+            height:4px;border-radius:2px;background:#e9ecef;overflow:hidden;margin-top:6px;
+        }
+        .acc-pw-strength-bar{
+            height:100%;width:0%;background:#dc3545;transition:width .2s, background .2s;
+        }
+    </style>
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+
+            <div class="row div-navigator m-2 p-2">
+                <div class="col-12"><p><a href="/dashboard">Dashboard</a> / My Account</p></div>
+            </div>
+
+            <div class="row p-2 m-2 div-title">
+                <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                    <h1 id="idTitle">My Account</h1>
+                </div>
+            </div>
+
+            <div class="row mt-2 g-3">
+
+                <!-- ===================== LEFT: identity card ===================== -->
+                <div class="col-12 col-lg-4">
+                    <div class="card card-body shadow-sm h-100 text-center">
+
+                        <div class="acc-avatar-wrap">
+                            <img id="accAvatarImg" src="" alt="Profile photo" style="display:none;">
+                            <div id="accAvatarFallback" class="acc-avatar-fallback">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <label class="acc-avatar-edit" for="accImageInput" title="Change photo">
+                                <i class="fa-solid fa-camera"></i>
+                            </label>
+                            <input type="file" id="accImageInput" accept="image/*" hidden>
+                        </div>
+
+                        <div id="accImageActions" class="mt-2" style="display:none;">
+                            <button class="btn btn-sm btn-success" id="accImageSave">Save photo</button>
+                            <button class="btn btn-sm btn-outline-secondary" id="accImageCancel">Cancel</button>
+                            <button class="btn btn-sm btn-link text-danger" id="accImageRemove">Remove</button>
+                        </div>
+
+                        <span id="accTypeBadge" class="badge rounded-pill acc-type-badge mt-3" style="display:none;"></span>
+
+                        <h4 class="mt-2 mb-0" id="accDisplayName">Loading...</h4>
+                        <p class="text-muted mb-2" id="accDisplayUsername">@username</p>
+
+                        <p class="mb-2">
+                            <span class="acc-status-dot" id="accStatusDot"></span>
+                            <span id="accStatusText" class="fw-semibold small"></span>
+                        </p>
+
+                        <div id="accRoleBadges" class="d-flex flex-wrap justify-content-center gap-1 mb-3"></div>
+
+                        <hr>
+
+                        <div class="text-start">
+                            <div class="acc-readonly-row">
+                                <span id="accOwnerRowLabel">Employee</span><span id="accEmployeeName">-</span>
+                            </div>
+                            <div class="acc-readonly-row">
+                                <span id="accRoleRowLabel">Designation</span><span id="accDesignation">-</span>
+                            </div>
+                            <div class="acc-readonly-row">
+                                <span>Account created</span><span id="accCreatedDate">-</span>
+                            </div>
+                            <div class="acc-readonly-row">
+                                <span>Last updated</span><span id="accUpdatedDate">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===================== RIGHT: tabs ===================== -->
+                <div class="col-12 col-lg-8">
+                    <div class="card card-body shadow-sm h-100">
+                        <div class="row g-0">
+
+                            <div class="col-12 col-md-3 border-end acc-nav">
+                                <div class="nav flex-md-column nav-pills" id="accNavPills" role="tablist">
+                                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tabDetails" type="button">
+                                        <i class="fa-solid fa-id-card"></i> Details
+                                    </button>
+                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabPassword" type="button">
+                                        <i class="fa-solid fa-lock"></i> Password
+                                    </button>
+
+                                    <!-- FARMER only -->
+                                    <button class="nav-link d-none" id="navTabCrops" data-bs-toggle="pill" data-bs-target="#tabCrops" type="button">
+                                        <i class="fa-solid fa-seedling"></i> Crops &amp; Pricing
+                                    </button>
+                                    <button class="nav-link d-none" id="navTabCompost" data-bs-toggle="pill" data-bs-target="#tabCompost" type="button">
+                                        <i class="fa-solid fa-recycle"></i> Compost Balance
+                                    </button>
+
+                                    <!-- SUPPLIER only -->
+                                    <button class="nav-link d-none" id="navTabIngredients" data-bs-toggle="pill" data-bs-target="#tabIngredients" type="button">
+                                        <i class="fa-solid fa-flask"></i> Ingredients &amp; Pricing
+                                    </button>
+
+                                    <!-- SUPERMARKET only -->
+                                    <button class="nav-link d-none" id="navTabBalance" data-bs-toggle="pill" data-bs-target="#tabBalance" type="button">
+                                        <i class="fa-solid fa-wallet"></i> Balance
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-9 ps-md-4 mt-3 mt-md-0">
+                                <div class="tab-content">
+
+                                    <!-- ---------- DETAILS TAB ---------- -->
+                                    <div class="tab-pane fade show active" id="tabDetails">
+                                        <form id="formAccountDetails" onsubmit="return false" novalidate>
+                                            <div class="row mt-1">
+                                                <div class="col-12">
+                                                    <label for="accUsername" class="form-label fw-bold">
+                                                        Username : <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-text"><i class="fa-solid fa-user"></i></div>
+                                                        <input type="text" id="accUsername" class="form-control" required
+                                                               placeholder="Enter username">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-12">
+                                                    <label for="accEmail" class="form-label fw-bold">
+                                                        Email : <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-text"><i class="fa-solid fa-envelope"></i></div>
+                                                        <input type="email" id="accEmail" class="form-control" required
+                                                               placeholder="Enter email">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-12">
+                                                    <label for="accNote" class="form-label fw-bold">Note :</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-text"><i class="fa-solid fa-note-sticky"></i></div>
+                                                        <textarea id="accNote" class="form-control" rows="2"
+                                                                  placeholder="Optional note"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-4">
+                                                <div class="col text-end">
+                                                    <button type="button" class="btn btn-outline-secondary" id="accDetailsReset">Reset</button>
+                                                    <button type="submit" class="btn btn-success" id="accDetailsSave">Save changes</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- ---------- PASSWORD TAB ---------- -->
+                                    <div class="tab-pane fade" id="tabPassword">
+                                        <form id="formAccountPassword" onsubmit="return false" novalidate>
+                                            <div class="row mt-1">
+                                                <div class="col-12">
+                                                    <label for="accCurrentPassword" class="form-label fw-bold">
+                                                        Current password : <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-text"><i class="fa-solid fa-key"></i></div>
+                                                        <input type="password" id="accCurrentPassword" class="form-control" required
+                                                               placeholder="Enter current password" autocomplete="current-password">
+                                                        <button class="btn btn-outline-secondary" type="button" data-toggle-pw="accCurrentPassword">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-12">
+                                                    <label for="accNewPassword" class="form-label fw-bold">
+                                                        New password : <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-text"><i class="fa-solid fa-lock"></i></div>
+                                                        <input type="password" id="accNewPassword" class="form-control" required
+                                                               placeholder="Enter new password" autocomplete="new-password">
+                                                        <button class="btn btn-outline-secondary" type="button" data-toggle-pw="accNewPassword">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="acc-pw-strength"><div class="acc-pw-strength-bar" id="accPwStrengthBar"></div></div>
+                                                    <small class="text-muted" id="accPwHint">At least 8 characters, mix letters &amp; numbers</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-12">
+                                                    <label for="accConfirmPassword" class="form-label fw-bold">
+                                                        Confirm new password : <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-text"><i class="fa-solid fa-lock"></i></div>
+                                                        <input type="password" id="accConfirmPassword" class="form-control" required
+                                                               placeholder="Re-enter new password" autocomplete="new-password">
+                                                        <button class="btn btn-outline-secondary" type="button" data-toggle-pw="accConfirmPassword">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-4">
+                                                <div class="col text-end">
+                                                    <button type="button" class="btn btn-outline-secondary" id="accPasswordReset">Reset</button>
+                                                    <button type="submit" class="btn btn-warning" id="accPasswordSave">Update password</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- ---------- FARMER: CROPS & PRICING TAB (self-service, editable) ---------- -->
+                                    <div class="tab-pane fade" id="tabCrops">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="fw-bold mb-0">My Crops &amp; Selling Price</h6>
+                                            <span class="badge bg-success-subtle text-success-emphasis" id="accCompostCustomerBadge" style="display:none;">
+                                        Compost Customer
+                                    </span>
+                                        </div>
+
+                                        <!-- Add crop row -->
+                                        <div class="row mt-2 align-items-end">
+                                            <div class="col-6">
+                                                <label for="accSelectCrop" class="form-label fw-bold">Crop : <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-text"><i class="fa-solid fa-wheat-awn"></i></div>
+                                                    <select class="form-select" id="accSelectCrop" required>
+                                                        <option value="" selected disabled>Select Crop</option>
+                                                        <!-- populated via JS -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-5">
+                                                <label for="accCropPrice" class="form-label fw-bold">Price Per Unit : <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-text"><i class="fa-solid fa-tag"></i></div>
+                                                    <input type="number" step="0.01" placeholder="Enter Price Per Unit" id="accCropPrice" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-1">
+                                                <button type="button" class="btn btn-success" id="accButtonAddCrop">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Crop items table -->
+                                        <div class="row mt-2">
+                                            <div class="col">
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover align-middle" id="accCropsTable">
+                                                        <thead class="table-light">
+                                                        <tr><th>#</th><th>Crop</th><th>Sell Price</th><th>Status</th><th>Remove</th></tr>
+                                                        </thead>
+                                                        <tbody id="accCropsTableBody"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-2">
+                                            <div class="col text-end">
+                                                <button type="button" class="btn btn-success" id="accCropsSave">Save Crop Prices</button>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mt-2 mb-0">
+                                            A new crop or a changed price may need manager approval before it goes Active.
+                                        </p>
+                                    </div>
+
+                                    <!-- ---------- FARMER: COMPOST BALANCE TAB ---------- -->
+                                    <div class="tab-pane fade" id="tabCompost">
+                                        <h6 class="fw-bold">Compost Account</h6>
+                                        <div class="acc-readonly-row">
+                                            <span>Compost customer</span><span id="accCompostCustomerText">-</span>
+                                        </div>
+                                        <div class="acc-readonly-row">
+                                            <span>Due amount</span><span id="accCompostDue">-</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- ---------- SUPPLIER: INGREDIENTS & PRICING TAB (self-service, editable) ---------- -->
+                                    <div class="tab-pane fade" id="tabIngredients">
+                                        <h6 class="fw-bold">My Ingredients &amp; Selling Price</h6>
+
+                                        <!-- Add ingredient row -->
+                                        <div class="row mt-2 align-items-end">
+                                            <div class="col-6">
+                                                <label for="accSelectIngredient" class="form-label fw-bold">Ingredient : <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-text"><i class="fa-solid fa-flask"></i></div>
+                                                    <select class="form-select" id="accSelectIngredient" required>
+                                                        <option value="" selected disabled>Select Ingredient</option>
+                                                        <!-- populated via JS -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-5">
+                                                <label for="accIngredientPrice" class="form-label fw-bold">Price Per Unit : <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-text"><i class="fa-solid fa-tag"></i></div>
+                                                    <input type="number" step="0.01" placeholder="Enter Price Per Unit" id="accIngredientPrice" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-1">
+                                                <button type="button" class="btn btn-success" id="accButtonAddIngredient">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Ingredient items table -->
+                                        <div class="row mt-2">
+                                            <div class="col">
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover align-middle" id="accIngredientsTable">
+                                                        <thead class="table-light">
+                                                        <tr><th>#</th><th>Ingredient</th><th>Sell Price</th><th>Status</th><th>Remove</th></tr>
+                                                        </thead>
+                                                        <tbody id="accIngredientsTableBody"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-2">
+                                            <div class="col text-end">
+                                                <button type="button" class="btn btn-success" id="accIngredientsSave">Save Ingredient Prices</button>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mt-2 mb-0">
+                                            A new ingredient or a changed price may need manager approval before it goes Active.
+                                        </p>
+                                    </div>
+
+                                    <!-- ---------- SUPERMARKET: BALANCE TAB ---------- -->
+                                    <div class="tab-pane fade" id="tabBalance">
+                                        <h6 class="fw-bold">Account Balance</h6>
+                                        <div class="acc-readonly-row">
+                                            <span>Due amount</span><span id="accSupermarketDue">-</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/user/useraccount.js"></script>
+</body>
+</html>

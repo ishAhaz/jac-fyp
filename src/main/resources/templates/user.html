@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+
+
+</head>
+
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+
+            <!-- navigator -->
+            <div class="row div-navigator m-2 p-2">
+                <div class="col-12">
+                    <p><a href="/dashboard">Dashboard</a> /User Module /User Management</p>
+                </div>
+            </div>
+
+            <!-- title area -->
+            <div class="row p-2 m-2 div-title">
+                <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                    <h1 id="idTitle">User Management</h1>
+                </div>
+            </div>
+
+
+            <!-- add new user button -->
+            <div class="row mt-2">
+                <button onclick="runBackfill()">Backfill Pending Accounts</button>
+
+                <script>
+                    function runBackfill() {
+                        fetch('/user/usermanagement/backfill-pending-accounts', { method: 'POST' })
+                            .then(r => r.text())
+                            .then(msg => alert(msg));
+                    }
+                </script>
+                <div class="col text-end">
+                    <button id="addNewUserId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#UserAddForm">
+                        Add New User
+                    </button>
+                </div>
+            </div>
+
+            <!-- table area -->
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="card card-body tableCard">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tableUser">
+                                <thead class="table-dark" id="tableHeadId">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Account Type</th>
+                                    <th>Account Owner</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Roles</th>
+                                    <th>Status</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBodyId"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- user add/edit form modal -->
+<div class="modal" id="UserAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit" class="d-none">Edit User</h2>
+                <h2 id="formTitleNew">Add New User</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formUser" onsubmit="return false" novalidate>
+
+                    <!-- required mark -->
+                    <div class="row mt-1">
+
+
+                        <div class="col-4">
+                            <label for="regDate"><b>Added Date and Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label for="updateDate"><b>Last Updated Date and Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="rom mt-1">
+                        <div class="col" >
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- User Profile Picture -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <div>
+                                <label for="fileUserImage" class="form-label fw-bold">
+                                    Profile Picture :
+                                </label>
+                            </div>
+                            <div class="position-relative d-inline-block">
+                                <img id="imgUserPreview" src="/images/img/user_default.png"
+                                     class="img-thumbnail"
+                                     style="width:150px; height:150px; object-fit:cover;">
+
+                                <button type="button"
+                                        id="btnRemoveImage"
+                                        class="position-absolute top-0 end-0 p-0 border-0 bg-transparent"
+                                        style="font-size:16px; color:#444;">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+
+                            <br>
+
+
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-image"></i></span>
+                                </div>
+                                <input type="file" id="fileUserImage" class="form-control" accept="image/*">
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <!-- Account Type -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectAccountType" class="form-label fw-bold">
+                                Account Type : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-id-badge"></i></span>
+                                </div>
+                                <select id="selectAccountType" class="form-select" required>
+                                    <option value="" selected disabled>Select Account Type</option>
+                                    <option value="Employee">Employee</option>
+                                    <option value="Farmer">Farmer</option>
+                                    <option value="Supermarket">Supermarket</option>
+                                    <option value="Supplier">Supplier</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Owner select (only one of these four visible at a time) / Display name -->
+                    <div class="row mt-2">
+                        <div class="col-6 d-none" id="employeeSelectGroup">
+                            <label for="selectEmployee" class="form-label fw-bold">
+                                Employee : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user"></i></span>
+                                </div>
+                                <select id="selectEmployee" class="form-select">
+                                    <option value="" selected disabled>Select Employee</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6 d-none" id="farmerSelectGroup">
+                            <label for="selectFarmer" class="form-label fw-bold">
+                                Farmer : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-person-digging"></i></span>
+                                </div>
+                                <select id="selectFarmer" class="form-select">
+                                    <option value="" selected disabled>Select Farmer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6 d-none" id="supermarketSelectGroup">
+                            <label for="selectSupermarket" class="form-label fw-bold">
+                                Supermarket : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-store"></i></span>
+                                </div>
+                                <select id="selectSupermarket" class="form-select">
+                                    <option value="" selected disabled>Select Supermarket</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6 d-none" id="supplierSelectGroup">
+                            <label for="selectSupplier" class="form-label fw-bold">
+                                Supplier : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-truck"></i></span>
+                                </div>
+                                <select id="selectSupplier" class="form-select">
+                                    <option value="" selected disabled>Select Supplier</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="textCallingname" class="form-label fw-bold" id="labelCallingname">
+                                Callingname : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span>
+                                       <i class="fa-solid fa-signature"></i>
+                                    </span>
+                                </div>
+                                <input type="text" required readonly placeholder="Auto-filled from selection"
+                                       id="textCallingname" class="form-control">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <!-- username -->
+                        <div class="col-6">
+                            <label for="textUsername" class="form-label fw-bold">Username : <span
+                                    class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-user-tag"></i></span>
+                                </div>
+                                <input type="text" placeholder="Enter Username" required id="textUsername"
+                                       class="form-control">
+                            </div>
+                        </div>
+                        <!-- email -->
+                        <div class="col-6">
+                            <label for="textEmail" class="form-label fw-bold">Email :<span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span>
+                                       <i class="fa-solid fa-envelope"></i>
+                                    </span>
+                                </div>
+                                <input type="email" required placeholder="Enter email" id="textEmail" class="form-control">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Password / Re-type Password -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textPassword" class="form-label fw-bold">Password : <span
+                                    class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-lock"></i></span>
+                                </div>
+                                <input type="password" placeholder="Enter Password" required id="textPassword"
+                                       class="form-control">
+
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="textRetypePassword" class="form-label fw-bold">Re-type Password : <span
+                                    class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-lock"></i></span>
+                                </div>
+                                <input type="password" placeholder="Re-type Password" required id="textRetypePassword"
+                                       class="form-control">
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Roles -->
+                    <div class="row mt-2">
+                        <!-- Roles -->
+                        <div class="col-12">
+                            <div>
+                                <label class="form-label fw-bold">Roles : <span class="text-danger">*</span></label>
+                            </div>
+                            <div id="rolecolumn">
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+                        <!-- User Status -->
+                        <div class="col-6" id="userStatusCol">
+                            <label for="selectUserStatus" class="form-label fw-bold">User Status : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-circle-check"></i></span>
+                                </div>
+                                <select required class="form-select" id="selectUserStatus">
+                                    <option value="" selected disabled>Select user status</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Note -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="textUserNote" class="form-label fw-bold">Note :</label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-note-sticky"></i></span>
+                                </div>
+                                <textarea placeholder="Enter note" id="textUserNote" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint"
+                                    id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete "
+                                    id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate " id="buttonUpdate"
+                                    type="button">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit"
+                                    type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- user add/edit form modal end -->
+
+<!-- print view modal -->
+<div class="modal" id="UserViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View User</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintUser">
+                    <div class="card-header">
+                        <h1>User Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr>
+                                <th>Account Type</th>
+                                <td id="tdAccountType"></td>
+                            </tr>
+                            <tr>
+                                <th>Account Owner</th>
+                                <td id="tdEmployee"></td>
+                            </tr>
+                            <tr>
+                                <th>Username</th>
+                                <td id="tdUsername"></td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td id="tdEmail"></td>
+                            </tr>
+                            <tr>
+                                <th>Role</th>
+                                <td id="tdRole"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td id="tdStatus"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printUserRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- print view modal end -->
+
+
+
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<!--linked js file  -->
+<script src="/js/user/user.js"></script>
+</body>
+
+</html>

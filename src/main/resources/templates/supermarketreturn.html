@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <!-- for search -->
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+
+            <!-- navigator -->
+            <div class="row div-navigator m-2 p-2">
+                <div class="col-12">
+                    <p><a href="/dashboard">Dashboard</a> /Supermarket Module /Return Management</p>
+                </div>
+            </div>
+
+            <!-- title area -->
+            <div class="row p-2 m-2 div-title">
+                <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                    <h1 id="idTitle">Return Management</h1>
+                </div>
+            </div>
+
+            <!-- add new button -->
+            <div class="row mt-2">
+                <div class="col text-end">
+                    <button id="addNewReturnId" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ReturnAddForm">Add New Return</button>
+                </div>
+            </div>
+
+            <!-- table area -->
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="card card-body tableCard">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tableReturn">
+                                <thead class="table-dark" id="tableHeadId">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Return ID</th>
+                                    <th>Reference Order ID</th>
+                                    <th>Quantity</th>
+                                    <th>Reason</th>
+                                    <th>Return Date</th>
+                                    <th>Return Status</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBodyId">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Return Add/Edit Form Modal -->
+<div class="modal" id="ReturnAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Return</h2>
+                <h2 id="formTitleNew">Add New Return</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formReturn" onsubmit="return false" novalidate>
+
+                    <!-- Meta info -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Registration Date and Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Last Updated Date and Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Return No :</b></label>
+                            <p id="InputReturnNo"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- required mark -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Linked Order / Return Date -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectOrder" class="form-label fw-bold">Reference Order : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-file-invoice"></i></span>
+                                </div>
+                                <select required class="form-select" id="selectOrder">
+                                    <option value="" selected disabled>Select reference Order</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="dateReturnDate" class="form-label fw-bold">Return Date : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-calendar-days"></i></span>
+                                </div>
+                                <input type="date" required id="dateReturnDate" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Return Status / user -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectReturnStatus" class="form-label fw-bold">Return Status : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-rotate-left"></i></span>
+                                </div>
+                                <select required class="form-select" id="selectReturnStatus">
+                                    <option value="" selected disabled>Select return status</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reason -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="textReason" class="form-label fw-bold">Reason : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-circle-exclamation"></i></span>
+                                </div>
+                                <textarea placeholder="Enter Reason for Return" required id="textReason" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- ===== RETURN ITEMS SECTION ===== -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <h5 class="fw-bold"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Return Items</h5>
+                        </div>
+                    </div>
+
+                    <!-- Return Item Add Row — mirrors compost return's add row -->
+                    <div class="row mt-2 align-items-end">
+                        <div class="col-5">
+                            <label for="selectOrderItem" class="form-label fw-bold">Order Item : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-box"></i></span>
+                                </div>
+                                <select class="form-select" id="selectOrderItem">
+                                    <option value="" selected disabled>Select Order Item</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <label for="textOrderedQty" class="form-label fw-bold">Ordered Qty</label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-clipboard-list"></i></span>
+                                </div>
+                                <input type="text" readonly id="textOrderedQty" class="form-control bg-light" placeholder="-">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <label for="textReturnQty" class="form-label fw-bold">Return Quantity : <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <span><i class="fa-solid fa-cubes"></i></span>
+                                </div>
+                                <input type="number" step="0.01" min="0" placeholder="Qty" id="textReturnQty" class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn btn-success" id="buttonAddReturnItem">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Return Items Table -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-striped" id="tableReturnItems">
+                                    <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Order Item</th>
+                                        <th>Return Quantity</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="returnItemsBody">
+                                    <!-- Dynamic rows added by JS -->
+                                    </tbody>
+                                    <tfoot>
+                                    <tr class="table-secondary">
+                                        <td colspan="2" class="text-end fw-bold">Total Return Quantity :</td>
+                                        <td id="tdTotalReturnQty" class="fw-bold">0.00</td>
+                                        <td></td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ===== RETURN ITEMS SECTION END ===== -->
+
+                    <!-- Buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear" id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint" id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Return Add/Edit Form Modal end -->
+
+
+<!-- Print View Modal -->
+<div class="modal" id="ReturnViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Return</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintReturn">
+                    <div class="card-header">
+                        <h1>Return Details</h1>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr>
+                                <th>Return No</th>
+                                <td id="tdReturnNo"></td>
+                            </tr>
+                            <tr>
+                                <th>Reference Order</th>
+                                <td id="tdLinkedOrder"></td>
+                            </tr>
+                            <tr>
+                                <th>Return Date</th>
+                                <td id="tdReturnDate"></td>
+                            </tr>
+                            <tr>
+                                <th>Return Status</th>
+                                <td id="tdReturnStatus"></td>
+                            </tr>
+                            <tr>
+                                <th>Total Return Quantity</th>
+                                <td id="tdTotalQty"></td>
+                            </tr>
+                            <tr>
+                                <th>Reason</th>
+                                <td id="tdReason"></td>
+                            </tr>
+                            <tr>
+                                <th>User</th>
+                                <td id="tdUser"></td>
+                            </tr>
+                        </table>
+
+                        <!-- Return Items print view -->
+                        <h5 class="mt-3 fw-bold">Return Items</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tablePrintReturnItems">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Order Item</th>
+                                    <th>Return Quantity</th>
+                                </tr>
+                                </thead>
+                                <tbody id="printReturnItemsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printReturnRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Print View Modal end -->
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<!-- linked js file -->
+<script src="/js/supermarket/supermarketreturn.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+    <style>
+        /* Simple click-to-zoom for the proof preview modal */
+        #proofPreviewImage {
+            max-width: 100%;
+            max-height: 70vh;
+            cursor: zoom-in;
+            transition: transform 0.2s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        #proofPreviewImage.zoomed {
+            transform: scale(1.8);
+            cursor: zoom-out;
+        }
+        .payment-due-alert.overdue {
+            background-color: #f8d7da !important;
+            color: #842029;
+        }
+    </style>
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+
+            <!-- navigator -->
+            <div class="row div-navigator m-2 p-2">
+                <div class="col-12">
+                    <p><a href="/dashboard">Dashboard</a> /Payments Module /Payment Management</p>
+                </div>
+            </div>
+
+            <!-- title area -->
+            <div class="row p-2 m-2 div-title">
+                <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                    <h1 id="idTitle">Payment Management</h1>
+                </div>
+            </div>
+
+            <!--
+                No "New Payment" button here. Payment records are created
+                automatically (Unpaid) the moment a customer's order/sale
+                is approved by management. This page only OPENS an
+                existing record — either to submit payment details
+                (customer / staff with update rights) or to
+                approve/reject a submitted payment (manager with
+                approve rights).
+            -->
+
+            <!-- table area -->
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="card card-body tableCard">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tablePayment">
+                                <thead class="table-dark" id="tableHeadPayment">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Payment Type</th>
+                                    <th>Customer / Party</th>
+                                    <th>Order / Sale Ref</th>
+                                    <th>Method</th>
+                                    <th>Paid Amount (Rs.)</th>
+                                    <th>Payment Status</th>
+                                    <th>Payment Date</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBodyPayment"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end container -->
+
+    </div>
+</div>
+
+<!-- PAYMENT FORM MODAL -->
+<div class="modal" id="PaymentFormModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2 id="idFormTitle">Payment</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formPayment" onsubmit="return false" novalidate>
+
+                    <!-- meta row -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Payment Created Date and Time :</b></label>
+                            <p id="paymentRegDate">-</p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Last Updated Date and Time :</b></label>
+                            <p id="paymentUpdateDate">-</p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Payment No :</b></label>
+                            <p id="paymentRegNo">-</p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- payment-due alert (auto-discard warning, informational only —
+                         the actual discard job runs server-side) -->
+                    <div class="row mt-1 d-none" id="rowPaymentDueAlert">
+                        <div class="col-12">
+                            <div class="alert payment-due-alert mb-2 py-2" id="alertPaymentDue">
+                                <i class="fa-solid fa-clock"></i>
+                                <span id="paymentDueText"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- required note -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- ── PARTY TYPE / PAYMENT STATUS / USER (auto-filled, read only —
+                         set by the order/sale that triggered this record; never
+                         chosen manually here) ── -->
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <label for="displayPaymentType" class="form-label fw-bold">Payment Type :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-code-branch"></i></div>
+                                <input type="text" id="displayPaymentType" class="form-control"
+                                       readonly placeholder="Auto-filled">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="displayPaymentStatus" class="form-label fw-bold">Payment Status :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-circle-info"></i></div>
+                                <input type="text" id="displayPaymentStatus" class="form-control"
+                                       readonly placeholder="Auto-filled">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-user-tie"></i></div>
+                                <input type="text" id="userId" class="form-control"
+                                       placeholder="Auto-fill" autocomplete="off" required readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FLOW 1: Registered Farmer — auto-filled, read only -->
+                    <div id="sectionFarmer" class="d-none mt-2">
+                        <div class="row mt-2">
+                            <div class="col-4">
+                                <label for="displayPaymentFarmer" class="form-label fw-bold">Farmer :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-tractor"></i></div>
+                                    <input type="text" id="displayPaymentFarmer" class="form-control"
+                                           readonly placeholder="Auto-filled">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Source :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-sitemap"></i></div>
+                                    <input type="text" id="displayFarmerSourceType" class="form-control"
+                                           readonly placeholder="Auto-filled">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label fw-bold">Source Reference :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-file-invoice"></i></div>
+                                    <input type="text" id="displayFarmerSourceRef" class="form-control"
+                                           readonly placeholder="Auto-filled">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total + already paid -->
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Total Amount (Rs.) :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-coins"></i></div>
+                                    <input type="text" id="farmerTotalAmount"
+                                           class="form-control" readonly placeholder="Auto-filled from source">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Already Paid (Rs.) :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                                    <input type="text" id="farmerAlreadyPaidAmount"
+                                           class="form-control" readonly placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pay now + new total -->
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <label for="inputFarmerPayNowAmount" class="form-label fw-bold">
+                                    Pay Now (Rs.) : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-money-bill"></i></div>
+                                    <input type="number" step="0.01" min="0" id="inputFarmerPayNowAmount"
+                                           class="form-control" placeholder="0.00">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">New Total Paid (Rs.) :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-sack-dollar"></i></div>
+                                    <input type="text" id="farmerNewTotalPaidAmount"
+                                           class="form-control" readonly placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0 py-2">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    Enter only the amount being paid <b>now</b> — the new total paid is
+                                    calculated automatically. Partial payment allowed. Once a manager
+                                    approves this record, go to the Invoice module to generate an invoice.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FLOW 2: Supermarket — auto-filled, read only -->
+                    <div id="sectionSupermarket" class="d-none mt-2">
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <label for="displayPaymentSupermarket" class="form-label fw-bold">Supermarket :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-store"></i></div>
+                                    <input type="text" id="displayPaymentSupermarket" class="form-control"
+                                           readonly placeholder="Auto-filled">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Supermarket Order :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-basket-shopping"></i></div>
+                                    <input type="text" id="displaySupermarketOrderRef" class="form-control"
+                                           readonly placeholder="Auto-filled">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total + already paid -->
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Total Amount (Rs.) :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-coins"></i></div>
+                                    <input type="text" id="supermarketTotalAmount"
+                                           class="form-control" readonly placeholder="Auto-filled from order">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Already Paid (Rs.) :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                                    <input type="text" id="supermarketAlreadyPaidAmount"
+                                           class="form-control" readonly placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pay now + new total -->
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <label for="inputSupermarketPayNowAmount" class="form-label fw-bold">
+                                    Pay Now (Rs.) : <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-money-bill"></i></div>
+                                    <input type="number" step="0.01" min="0" id="inputSupermarketPayNowAmount"
+                                           class="form-control" placeholder="0.00">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">New Total Paid (Rs.) :</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-sack-dollar"></i></div>
+                                    <input type="text" id="supermarketNewTotalPaidAmount"
+                                           class="form-control" readonly placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0 py-2">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    Enter only the amount being paid <b>now</b> — the new total paid is
+                                    calculated automatically. Partial payment allowed. Once a manager
+                                    approves this record, go to the Invoice module to generate an invoice.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- ── PAYMENT METHOD (shared by all flows) ── -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectPaymentMethod" class="form-label fw-bold">
+                                Payment Method : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-credit-card"></i></div>
+                                <select id="selectPaymentMethod" class="form-select" required>
+                                    <option value="" selected disabled>Select Payment Method</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Bank_Transfer">Bank Transfer</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="Card">Card</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end align-self-end">
+                            <button type="button" class="btn btn-outline-secondary" id="buttonPreviewProof" disabled>
+                                <i class="fa-solid fa-image"></i> Preview Uploaded Proof
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bank Transfer details -->
+                    <div id="sectionBankTransfer" class="d-none mt-2">
+                        <div class="card card-body bg-light">
+                            <h6 class="fw-bold mb-2">
+                                <i class="fa-solid fa-building-columns"></i> Bank Transfer Details
+                            </h6>
+                            <div class="row">
+                                <div class="col-4">
+                                    <label for="bankName" class="form-label fw-bold">
+                                        Bank Name : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-building-columns"></i></div>
+                                        <input type="text" id="bankName" class="form-control" placeholder="Bank Name">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <label for="transactionId" class="form-label fw-bold">
+                                        Transaction ID : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-hashtag"></i></div>
+                                        <input type="text" id="transactionId" class="form-control"
+                                               placeholder="Transaction ID">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <label for="transactionDate" class="form-label fw-bold">
+                                        Transaction Date : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-calendar-days"></i></div>
+                                        <input type="date" id="transactionDate" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <label for="bankReceiptImage" class="form-label fw-bold">
+                                        Receipt Image : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-image"></i></div>
+                                        <input type="file" id="bankReceiptImage" class="form-control" accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cheque details -->
+                    <div id="sectionCheque" class="d-none mt-2">
+                        <div class="card card-body bg-light">
+                            <h6 class="fw-bold mb-2">
+                                <i class="fa-solid fa-money-check"></i> Cheque Details
+                            </h6>
+                            <div class="row">
+                                <div class="col-3">
+                                    <label for="chequeNumber" class="form-label fw-bold">
+                                        Cheque No : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-hashtag"></i></div>
+                                        <input type="text" id="chequeNumber" class="form-control"
+                                               placeholder="Cheque Number">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="chequeBankName" class="form-label fw-bold">
+                                        Bank Name : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-building-columns"></i></div>
+                                        <input type="text" id="chequeBankName" class="form-control"
+                                               placeholder="Bank Name">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="chequeBranch" class="form-label fw-bold">
+                                        Branch : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-code-branch"></i></div>
+                                        <input type="text" id="chequeBranch" class="form-control"
+                                               placeholder="Branch">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="chequeDate" class="form-label fw-bold">
+                                        Cheque Date : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-calendar-days"></i></div>
+                                        <input type="date" id="chequeDate" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-3">
+                                    <label for="clearingDate" class="form-label fw-bold">Clearing Date :</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-calendar-check"></i></div>
+                                        <input type="date" id="clearingDate" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="chequeStatus" class="form-label fw-bold">Cheque Status :</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-circle-info"></i></div>
+                                        <select id="chequeStatus" class="form-select">
+                                            <option value="" selected disabled>Select Status</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label for="chequeReceiptImage" class="form-label fw-bold">
+                                        Receipt Image : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-image"></i></div>
+                                        <input type="file" id="chequeReceiptImage" class="form-control"
+                                               accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card details -->
+                    <div id="sectionCard" class="d-none mt-2">
+                        <div class="card card-body bg-light">
+                            <h6 class="fw-bold mb-2">
+                                <i class="fa-solid fa-credit-card"></i> Card Payment Details
+                            </h6>
+                            <div class="row">
+                                <div class="col-3">
+                                    <label for="cardType" class="form-label fw-bold">
+                                        Card Type : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-credit-card"></i></div>
+                                        <select id="cardType" class="form-select">
+                                            <option value="" selected disabled>Select Type</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="last4Digits" class="form-label fw-bold">
+                                        Last 4 Digits : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-hashtag"></i></div>
+                                        <input type="text" id="last4Digits" class="form-control"
+                                               maxlength="4" placeholder="XXXX">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="cardRefNumber" class="form-label fw-bold">
+                                        Reference No : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-hashtag"></i></div>
+                                        <input type="text" id="cardRefNumber" class="form-control"
+                                               placeholder="Reference Number">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="cardReceiptImage" class="form-label fw-bold">
+                                        Receipt Image : <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><i class="fa-solid fa-image"></i></div>
+                                        <input type="file" id="cardReceiptImage" class="form-control"
+                                               accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Note / rejection reason -->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <label for="paymentNote" class="form-label fw-bold">Note :</label>
+                            <textarea id="paymentNote" class="form-control" rows="2"
+                                      placeholder="Optional note (also used to record a manager's rejection reason)"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- buttons -->
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-info buttonPrint"
+                                    id="buttonPaymentPrint">Print</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <!-- Reject: manager/approve-privilege only -->
+                            <button class="btn btn-outline-danger d-none"
+                                    id="buttonPaymentReject" type="button">
+                                <i class="fa-solid fa-xmark"></i> Reject
+                            </button>
+                            <!-- Approve: manager/approve-privilege only -->
+                            <button class="btn btn-success d-none"
+                                    id="buttonPaymentApprove" type="button">
+                                <i class="fa-solid fa-check"></i> Approve Payment
+                            </button>
+                            <!-- Submit: customer / update-privilege only -->
+                            <button class="btn btn-outline-warning buttonUpdate d-none"
+                                    id="buttonPaymentUpdate" type="submit">Submit Payment</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- PAYMENT VIEW / PRINT MODAL  -->
+<div class="modal" id="PaymentViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Payment</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintPayment">
+                    <div class="card-header"><h1>Payment Details</h1></div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr><th>Payment No</th><td id="tdPaymentId"></td></tr>
+                            <tr><th>Payment Type</th><td id="tdPaymentType"></td></tr>
+                            <tr><th>Customer / Party</th><td id="tdCustomer"></td></tr>
+                            <tr><th>Order / Sale Reference</th><td id="tdOrderRef"></td></tr>
+                            <tr><th>Payment Method</th><td id="tdMethod"></td></tr>
+                            <tr><th>Paid Amount (Rs.)</th><td id="tdPaidAmount"></td></tr>
+                            <tr><th>Payment Status</th><td id="tdPaymentStatus"></td></tr>
+                            <tr><th>Payment Date</th><td id="tdPaymentDate"></td></tr>
+                            <tr><th>Note</th><td id="tdPaymentNote"></td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printPaymentRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- PROOF PREVIEW MODAL (managers reviewing an uploaded receipt) -->
+<div class="modal" id="ProofPreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa-solid fa-receipt"></i> Payment Proof</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="proofPreviewImage" src="" alt="Payment proof">
+                <p class="text-muted mt-2 mb-0"><small>Click image to zoom in / out</small></p>
+            </div>
+            <div class="modal-footer">
+                <a id="proofPreviewOpenNewTab" href="#" target="_blank" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-up-right-from-square"></i> Open Full Size
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/payments/payment.js"></script>
+
+<script>
+    // ── Payment method -> show matching detail section ──
+    document.getElementById('selectPaymentMethod').addEventListener('change', function () {
+        const method = this.value;
+
+        document.getElementById('sectionBankTransfer').classList.add('d-none');
+        document.getElementById('sectionCheque').classList.add('d-none');
+        document.getElementById('sectionCard').classList.add('d-none');
+
+        if (method === 'Bank_Transfer') document.getElementById('sectionBankTransfer').classList.remove('d-none');
+        if (method === 'Cheque')        document.getElementById('sectionCheque').classList.remove('d-none');
+        if (method === 'Card')          document.getElementById('sectionCard').classList.remove('d-none');
+    });
+
+    // ── Proof preview zoom toggle ──
+    document.getElementById('proofPreviewImage').addEventListener('click', function () {
+        this.classList.toggle('zoomed');
+    });
+</script>
+</body>
+</html>

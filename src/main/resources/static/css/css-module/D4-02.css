@@ -1,0 +1,129 @@
+body{
+    background-image: linear-gradient(to left,#213a57,#0b6477,#14919b,#0ad1c8,#45dfb1,#80ed99);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+#idMaintableTh{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+   
+}
+#idMainTable{
+  
+   transform: translate(320px,0px);
+   border: 2px solid black;
+   border-radius:23px;
+   padding: 10px;
+}
+#idMainTh{
+    transform: translate(320px,0px);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: larger;
+}
+
+input,select,textarea{
+    border: 2px solid black;
+    border-radius: 15px;
+    background-color: #9ab8c9;
+    
+}
+ 
+
+/* inout */
+#txtFullName:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px;
+    transition: 0.56s;
+}
+
+
+#txtCallingName:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px;
+    transition: 0.56s;
+}
+
+#txtNIC:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px;
+    transition: 0.56s;
+} 
+
+#txtDate:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px;
+    transition: 0.56s;
+}
+
+#txtEmail:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px; 
+    transition: 0.56s;
+
+}
+
+#txtmobile:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px; 
+    transition: 0.56s;
+}
+
+#txtMLand:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px; 
+    transition: 0.56s;
+}
+
+#selectDesignation:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px;  
+    transition: 0.56s;
+}
+
+#selectStatus:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px;  
+    transition: 0.56s; 
+}
+
+#selectCivilStatus:hover{
+    background-color: rgb(134, 221, 233);
+    border-radius:0px ;
+    border: 0px;  
+    transition: 0.56s; 
+}
+
+
+/* button */
+#btnClear{
+    background-color: rgb(97, 170, 109);
+    padding: 5%;
+    border-radius:2px;
+}
+#btnClear:hover{
+   border-radius: 15px;
+   transition: 1s;
+}
+#btnUpdate{
+    background-color: rgb(207, 207, 105);
+    padding: 5%;
+    border-radius: 2px;
+}
+#btnUpdate:hover{
+    border-radius: 15px;
+    transition: 1s;
+ }
+#btnSubmit{
+    background-color: rgb(14, 25, 177);
+    padding: 5%;
+    border-radius: 5px;
+}

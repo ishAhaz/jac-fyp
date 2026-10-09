@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compost Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+
+<div class="layout">
+    <div id="sidebar"></div>
+
+    <div class="main-content" id="mainContent">
+<div class="container-fluid">
+
+    <div class="row div-navigator m-2 p-2">
+        <div class="col-12"><p><a href="/dashboard">Dashboard</a>  / Compost Module / Compost Management</p></div>
+    </div>
+
+    <div class="row p-2 m-2 div-title">
+        <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+            <h1 id="idTitle">Compost Management</h1>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col text-end">
+            <button id="addNewCompostId" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#CompostAddForm">Add New Compost</button>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card card-body tableCard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped" id="tableCompost">
+                        <thead class="table-dark" id="tableHeadId">
+                        <tr>
+                            <th>#</th><th>Compost ID</th><th>Name</th>
+                            <th>Ingredients</th><th>Target Crops</th><th>Status</th><th>Modify</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBodyId"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </div>
+</div>
+
+<!-- Compost Add / Edit Modal -->
+<div class="modal" id="CompostAddForm" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Compost</h2>
+                <h2 id="formTitleNew">Add New Compost</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCompost" onsubmit="return false" novalidate>
+
+                    <!-- Meta row -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Registration Date and Time :</b></label>
+                            <p id="regDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Last Updated Date and Time :</b></label>
+                            <p id="updateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Compost ID :</b></label>
+                            <p id="InputRegNo"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="row mt-1">
+                        <div class="col"><p>Required <span class="text-danger">*</span></p></div>
+                    </div>
+
+                    <!-- Name / Status -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="textName" class="form-label fw-bold">
+                                Compost Name : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-leaf"></i></div>
+                                <input type="text" placeholder="Enter Compost Name"
+                                       required id="textName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="selectStatus" class="form-label fw-bold">
+                                Compost Status : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-circle-check"></i></div>
+                                <select required class="form-select" id="selectStatus">
+                                    <option value="" selected disabled>Select Status</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unit /user -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="selectUnit" class="form-label fw-bold">
+                                Unit : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-weight-scale"></i></div>
+                                <select required class="form-select" id="selectUnit">
+                                    <option value="" selected disabled>Select Unit</option>
+                                    <option value="Kg">Kg</option>
+                                    <option value="L">L</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="userId" class="form-label fw-bold">
+                                User ID : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userId"
+                                        class="form-control"
+                                        placeholder="Auto-fill"
+                                        autocomplete="off"
+                                        required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="textDescription" class="form-label fw-bold">Description :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-file-lines"></i></div>
+                                <textarea placeholder="Enter Description"
+                                          id="textDescription" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- TABLE 1 : Ingredients -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <h5 class="fw-bold"><i class="fa-solid fa-flask me-2"></i>Compost Ingredients</h5>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 align-items-end">
+                        <div class="col-6">
+                            <label for="selectIngredient" class="form-label fw-bold">
+                                Ingredient : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-flask"></i></div>
+                                <select class="form-select" id="selectIngredient">
+                                    <option value="" selected disabled>Select Ingredient</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <label for="textQtyPerUnit" class="form-label fw-bold">
+                                Qty / Unit : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-scale-balanced"></i></div>
+                                <input type="number" step="0.01" min="0.01"
+                                       placeholder="e.g. 500" id="textQtyPerUnit" class="form-control">
+                                <select class="form-select" id="selectQtyUnit" style="max-width:80px;">
+                                    <option value="g">g</option>
+                                    <option value="ml">ml</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn btn-success" id="buttonAddIngredient">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-striped" id="tableIngredients">
+                                    <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th><th>Ingredient</th><th>Qty / Unit</th><th>Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tableIngredientsBody">
+                                    <tr id="ingEmptyRow">
+                                        <td colspan="4" class="text-center text-muted py-3">No ingredients added yet</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- TABLE 2 : Target Crops -->
+                    <div class="row mt-2">
+                        <div class="col">
+                            <h5 class="fw-bold"><i class="fa-solid fa-seedling me-2"></i>Target Crops</h5>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 align-items-end">
+                        <div class="col-6">
+                            <label for="selectCrop" class="form-label fw-bold">
+                                Crop : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-wheat-awn"></i></div>
+                                <select class="form-select" id="selectCrop">
+                                    <option value="" selected disabled>Select Crop</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <label for="textQtyPerAcre" class="form-label fw-bold">
+                                Qty / Acre : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-weight-scale"></i></div>
+                                <input type="number" step="0.01" min="0.01"
+                                       placeholder="e.g. 50" id="textQtyPerAcre" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-1">
+                            <button type="button" class="btn btn-success" id="buttonAddCrop">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-striped" id="tableCrops">
+                                    <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th><th>Crop Name</th><th>Qty / Acre</th>
+                                       <th>Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tableCropsBody">
+                                    <tr id="cropEmptyRow">
+                                        <td colspan="2" class="text-center text-muted py-3">No crops added yet</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset"  class="btn btn-outline-primary  buttonClear"  id="buttonClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info     buttonPrint"  id="buttonPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger   buttonDelete" id="buttonDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate" id="buttonUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit" id="buttonSubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Print / View Modal -->
+<div class="modal" id="CompostViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Compost</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintCompost">
+                    <div class="card-header"><h1>Compost Details</h1></div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr><th>Compost Name</th> <td id="tdName"></td></tr>
+                            <tr><th>Status</th>       <td id="tdStatus"></td></tr>
+                            <tr><th>Unit</th>         <td id="tdUnit"></td></tr>
+                            <tr><th>Description</th>  <td id="tdDescription"></td></tr>
+                        </table>
+
+                        <h5 class="fw-bold mt-3"><i class="fa-solid fa-seedling me-2"></i>Target Crops</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tablePrintCrops">
+                                <thead class="table-dark">
+                                <tr><th>#</th><th>Crop</th><th>Qty / Acre</th><th>Price / Acre</th></tr>
+                                </thead>
+                                <tbody id="tablePrintCropsBody"></tbody>
+                            </table>
+                        </div>
+
+                        <h5 class="fw-bold mt-3"><i class="fa-solid fa-flask me-2"></i>Ingredients</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tablePrintIngredients">
+                                <thead class="table-dark">
+                                <tr><th>#</th><th>Ingredient</th><th>Qty / Unit</th></tr>
+                                </thead>
+                                <tbody id="tablePrintIngredientsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printCompostRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/compost/compost.js"></script>
+</body>
+</html>

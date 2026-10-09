@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Management</title>
+    <link rel="icon" href="/images/img/Logo.png">
+    <link rel="stylesheet" href="/css/bootstrap-5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome-free-7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/css-module/dashboard.css">
+    <link rel="stylesheet" href="/css/css-module/D5-01.css">
+
+    <link rel="stylesheet" href="/js/notiflix/dist/notiflix-3.2.8.min.css">
+    <link rel="stylesheet" href="/js/DataTabels/datatables.min.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="layout">
+    <div id="sidebar"></div>
+    <div class="main-content" id="mainContent">
+        <div class="container-fluid">
+
+            <!-- navigator -->
+            <div class="row div-navigator m-2 p-2">
+                <div class="col-12">
+                    <p><a href="/dashboard">Dashboard</a> /Logistics Module /Delivery Management</p>
+                </div>
+            </div>
+
+            <!-- title area -->
+            <div class="row p-2 m-2 div-title">
+                <div class="col text-center shadow p-1 mb-2 bg-body-tertiary rounded">
+                    <h1 id="idTitle">Delivery Management</h1>
+                </div>
+            </div>
+
+            <!-- table area -->
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="card card-body tableCard">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="tableDelivery">
+                                <thead class="table-dark" id="tableHeadDelivery">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Delivery ID</th>
+                                    <th>Sale Type</th>
+                                    <th>Reference No</th>
+                                    <th>Customer / Party</th>
+                                    <th>Delivery Address</th>
+                                    <th>Deliver Date</th>
+                                    <th>Delivery Status</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBodyDelivery"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end container -->
+    </div>
+</div>
+
+<!-- ===== DELIVERY FORM MODAL ===== -->
+<div class="modal" id="DeliveryFormModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2 id="formTitleEdit">Edit Delivery</h2>
+                <h2 id="formTitleNew">Schedule Delivery</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formDelivery" onsubmit="return false" novalidate>
+
+                    <!-- meta row -->
+                    <div class="row mt-1">
+                        <div class="col-4">
+                            <label><b>Created Date & Time :</b></label>
+                            <p id="createdDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Last Updated Date and Time :</b></label>
+                            <p id="deliveryUpdateDate"></p>
+                        </div>
+                        <div class="col-4">
+                            <label><b>Delivery ID :</b></label>
+                            <p id="deliveryRegNo"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- required note -->
+                    <div class="row mt-1">
+                        <div class="col">
+                            <p>Required <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+
+                    <!-- sale type / reference -->
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <label for="selectSaleType" class="form-label fw-bold">
+                                Sale Type : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-tags"></i></div>
+                                <select id="selectSaleType" class="form-select" required>
+                                    <option value="" selected disabled>Select Sale Type</option>
+                                </select>
+                            </div>
+                            <small class="text-muted">Chooses which sale record this delivery links to.</small>
+                        </div>
+                        <div class="col-8">
+                            <label for="selectReference" class="form-label fw-bold">
+                                Reference (Payment / Order / Sale) : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                                <select id="selectReference" class="form-select" required disabled>
+                                    <option value="" selected disabled>Select Sale Type First</option>
+                                </select>
+                            </div>
+                            <small class="text-muted">
+                                Only records with delivery requested and no delivery assigned yet are shown.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- auto-filled customer / reference number -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label class="form-label fw-bold">Customer / Party :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-user"></i></div>
+                                <input type="text" id="deliveryCustomer" class="form-control"
+                                       readonly placeholder="Auto-filled from selected sale">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold">Reference No :</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-hashtag"></i></div>
+                                <input type="text" id="deliveryReferenceNo" class="form-control"
+                                       readonly placeholder="Auto-filled from selected sale">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- delivery address (own field on the entity, editable but pre-filled) -->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <label for="deliveryAddress" class="form-label fw-bold">
+                                Delivery Address : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-location-dot"></i></div>
+                                <input type="text" id="deliveryAddress" class="form-control"
+                                       placeholder="Auto-filled from sale — edit if needed">
+                            </div>
+                            <small class="text-muted">
+                                Pre-filled from the selected sale's address. You can adjust it before saving.
+                            </small>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- deliver date / status -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label for="dateDelivered" class="form-label fw-bold">
+                                Actual Deliver Date :
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-calendar-check"></i></div>
+                                <input type="date" id="dateDelivered" class="form-control"
+                                       placeholder="Set when delivered">
+                            </div>
+                            <small class="text-muted">Fill this only when delivery is confirmed as delivered.</small>
+                        </div>
+                        <div class="col-6">
+                            <label for="selectDeliveryStatus" class="form-label fw-bold">
+                                Delivery Status : <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fa-solid fa-circle-half-stroke"></i></div>
+                                <select id="selectDeliveryStatus" class="form-select" required>
+                                    <option value="" selected disabled>Select Status</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- buttons -->
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-outline-primary buttonClear"
+                                    id="buttonDeliveryClear">Clear</button>
+                            <button type="button" class="btn btn-outline-info buttonPrint"
+                                    id="buttonDeliveryPrint">Print</button>
+                            <button type="button" class="btn btn-outline-danger buttonDelete"
+                                    id="buttonDeliveryDelete">Delete</button>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-warning buttonUpdate"
+                                    id="buttonDeliveryUpdate" type="submit">Update</button>
+                            <button class="btn btn-outline-success buttonSubmit"
+                                    id="buttonDeliverySubmit" type="button">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===== DELIVERY VIEW / PRINT MODAL ===== -->
+<div class="modal" id="DeliveryViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>View Delivery</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card" id="divCardPrintDelivery">
+                    <div class="card-header"><h1>Delivery Details</h1></div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <tr><th>Delivery ID</th><td id="tdDeliveryId"></td></tr>
+                            <tr><th>Sale Type</th><td id="tdSaleType"></td></tr>
+                            <tr><th>Reference No</th><td id="tdReferenceNo"></td></tr>
+                            <tr><th>Customer / Party</th><td id="tdDeliveryCustomer"></td></tr>
+                            <tr><th>Delivery Address</th><td id="tdDeliveryAddress"></td></tr>
+                            <tr><th>Actual Deliver Date</th><td id="tdDeliverDate"></td></tr>
+                            <tr><th>Delivery Status</th><td id="tdDeliveryStatus"></td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="button" class="btn btn-info" onclick="printDeliveryRecord()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/common/jquery-3.7.1.min.js"></script>
+<script src="/css/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="/js/layout/layout-topbar.js"></script>
+<script src="/js/layout/layout-sidebar.js"></script>
+
+<script src="/js/common/notification-bar.js"></script>
+<script src="/js/notiflix/dist/notiflix-aio-3.2.8.min.js"></script>
+<script src="/js/DataTabels/datatables.min.js"></script>
+<script src="/js/common/commonFunction.js"></script>
+<script src="/js/logistics/delivery.js"></script>
+</body>
+</html>
